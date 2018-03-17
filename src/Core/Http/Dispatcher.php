@@ -60,6 +60,7 @@ class Dispatcher
         $session = $requestSession->get('test');
         var_dump($session);
 
+
         //注册捕获错误函数
 //        register_shutdown_function(array($this, 'handleFatal'));
         if ($request2->server['request_uri'] == '/favicon.ico' || $request2->server['path_info'] == '/favicon.ico') {

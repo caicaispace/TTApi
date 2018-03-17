@@ -44,8 +44,8 @@ class Event extends AbstractEvent
     {
         // TODO: Implement beforeWorkerStart() method.
 
-        // 直播
-        // \Conf\Live::getInstance()->beforeWorkerStart($server);
+//         直播
+//         \Conf\Live::getInstance()->beforeWorkerStart($server);
 
         // WebSocket
 //        \Conf\WebSocket::getInstance()->beforeWorkerStart($server);
