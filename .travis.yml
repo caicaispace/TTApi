@@ -1,0 +1,54 @@
+language: php
+
+sudo: true
+dist: trusty
+
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+
+env:
+  matrix:
+    - PHALCON_VERSION="3.0.x"
+    - PHALCON_VERSION="v3.0.0"
+    - PHALCON_VERSION="v3.0.1"
+
+git:
+  depth: 1
+
+services:
+  - mysql
+
+install:
+  - composer self-update
+  - git clone --depth=1 -q --branch=${PHALCON_VERSION} https://github.com/phalcon/cphalcon.git
+  - '(cd cphalcon/build; bash install &>/dev/null && phpenv config-add ../tests/_ci/phalcon.ini &> /dev/null && cd ../..;)'
+  - php --ri phalcon
+  - travis_retry composer install --prefer-dist --no-interaction
+
+before_script:
+  - echo 'CREATE DATABASE phalcon_demo CHARSET=utf8 COLLATE=utf8_unicode_ci' | mysql -u root
+  - cat schemas/phalcon_demo.sql | mysql -u root phalcon_demo
+
+script:
+  - vendor/bin/phpcs
+  - vendor/bin/codecept build
+  - vendor/bin/codecept run
+
+after_script:
+  - mysql -e 'DROP DATABASE phalcon_demo;'
+
+addons:
+  apt:
+    packages:
+    - mysql-server-5.6
+    - mysql-client-core-5.6
+    - mysql-client-5.6
+
+notifications:
+  email:
+    recipients:
+      - build@codeception.com
+    on_success: change
+    on_failure: always

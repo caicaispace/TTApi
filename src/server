@@ -1,0 +1,275 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Created by PhpStorm.
+ * User: yf
+ * Date: 2017/1/22
+ * Time: 下午9:46
+ */
+
+require_once 'Core/Core.php';
+require_once realpath(dirname(dirname(__FILE__))) . '/app/config/env.php';
+
+$server = Core\Core::getInstance()->frameWorkInitialize();
+function commandParser(){
+    global $argv;
+    $command = '';
+    $options = array();
+    if(isset($argv[1])){
+        $command = $argv[1];
+    }
+    foreach ($argv as $item){
+        if(substr($item,0,2) === '--'){
+            $temp = trim($item,"--");
+            $temp = explode("-",$temp);
+            $key = array_shift($temp);
+            $options[$key] = array_shift($temp) ?: '';
+        }
+    }
+    return array(
+        "command"=>$command,
+        "options"=>$options
+    );
+}
+
+function commandHandler(){
+    $command = commandParser();
+    switch ($command['command']){
+        case "start":{
+            startServer($command['options']);
+            break;
+        }
+        case 'stop':{
+            stopServer($command['options']);
+            break;
+        }
+        case 'reload':{
+            reloadServer($command['options']);
+            break;
+        }
+        case 'version':{
+            echo Core\Component\DI::getInstance()->get(Core\Component\SysConst::VERSION);
+            echo PHP_EOL;
+            break;
+        }
+        case 'help':
+        default:{
+            help($command['options']);
+        }
+
+    }
+}
+
+function startServer($options){
+    $logo = '
+               _______________
+               ___  __/__  __/
+               __  /  __  /   
+               _  /   _  /    
+               /_/    /_/              
+                                       Thanks Swoole and Phalcon.
+_.------------------------------------------------------------------._
+';
+    echo $logo.PHP_EOL;
+    opCacheClear();
+    global $server;
+    $conf = Conf\Config::getInstance();
+    if(isset($options['ip'])){
+        $conf->setConf("SERVER.LISTEN",$options['ip']);
+    }
+    echo 'listen address       '.$conf->getConf('SERVER.LISTEN').PHP_EOL;
+
+    if(!empty($options['p'])){
+        $conf->setConf("SERVER.PORT",$options['p']);
+    }
+    echo 'listen port          '.$conf->getConf('SERVER.PORT').PHP_EOL;
+
+    if(!empty($options['pid'])){
+        $pidFile = $options['pid'];
+        Conf\Config::getInstance()->setConf('SERVER.CONFIG.pid_file',$pidFile);
+    }
+
+    if(isset($options['workerNum'])){
+        $conf->setConf('SERVER.CONFIG.worker_num',$options['workerNum']);
+    }
+    echo 'worker num           '.$conf->getConf('SERVER.CONFIG.worker_num').PHP_EOL;
+
+    if(isset($options['taskWorkerNum'])){
+        $conf->setConf('SERVER.CONFIG.task_worker_num',$options['taskWorkerNum']);
+    }
+    echo 'task worker num      '.$conf->getConf('SERVER.CONFIG.task_worker_num').PHP_EOL;
+    if(isset($options['user'])){
+        $conf->setConf("SERVER.CONFIG.user",$options['user']);
+    }
+    echo 'user                 '.$conf->getConf('SERVER.CONFIG.user').PHP_EOL;
+
+    if(isset($options['group'])){
+        $conf->setConf("SERVER.CONFIG.group",$options['group']);
+    }
+    echo 'user group           '.$conf->getConf('SERVER.CONFIG.group').PHP_EOL;
+
+    if(isset($options['cpuAffinity'])){
+        $conf->setConf("SERVER.CONFIG.open_cpu_affinity",true);
+    }
+    $label = 'false';
+    if(isset($options['d'])){
+        $conf->setConf('SERVER.CONFIG.daemonize',true);
+        $label = 'true';
+    }else{
+        Conf\Config::getInstance()->setConf('SERVER.CONFIG.pid_file',null);
+    }
+    echo "daemonize            {$label} ".PHP_EOL;
+
+    $label = 'false';
+    if($conf->getConf('DEBUG.ENABLE')){
+         $label = 'true';
+    }
+    echo 'debug enable         '.$label.PHP_EOL;
+
+    $label = 'false';
+    if($conf->getConf('DEBUG.LOG')){
+             $label = 'true';
+    }
+    echo 'debug log error      '.$label.PHP_EOL;
+
+    $label = 'false';
+    if($conf->getConf('DEBUG.DISPLAY_ERROR')){
+        $label = 'true';
+    }
+    echo 'debug display error  '.$label.PHP_EOL;
+    echo 'swoole version       '.phpversion('swoole').PHP_EOL;
+    echo 'TT version           '.\Core\Component\Di::getInstance()->get(\Core\Component\SysConst::VERSION).PHP_EOL;
+    $server->run();
+
+}
+
+function stopServer($options){
+    $pidFile = Conf\Config::getInstance()->getConf('SERVER.CONFIG.pid_file');
+    if(!empty($options['pid'])){
+        $pidFile = $options['pid'];
+    }
+    if(!file_exists($pidFile)){
+        echo "pid file :{$pidFile} not exist ".PHP_EOL;
+        return;
+    }
+    $pid = file_get_contents($pidFile);
+    if(!swoole_process::kill($pid,0)){
+        echo "pid :{$pid} not exist ".PHP_EOL;
+        return;
+    }
+    if(isset($options['f'])){
+        swoole_process::kill($pid,SIGKILL);
+    }else{
+        swoole_process::kill($pid);
+    }
+    //等待两秒
+    $time = time();
+    while (true){
+        usleep(1000);
+        if(!swoole_process::kill($pid,0)){
+            echo 'server stop at '.date('y-m-d h:i:s').PHP_EOL;
+            if(is_file($pidFile)){
+                unlink($pidFile);
+            }
+            break;
+        }else{
+            if(time() - $time > 2){
+                echo 'stop server fail.try --force again '.PHP_EOL;
+                break;
+            }
+        }
+    }
+}
+
+function reloadServer($options){
+    $pidFile = Conf\Config::getInstance()->getConf('SERVER.CONFIG.pid_file');
+    if(isset($options['pid'])){
+        if(!empty($options['pid'])){
+            $pidFile = $options['pid'];
+        }
+    }
+    if(isset($options['all']) && $options['all'] == false){
+        $sig = SIGUSR2;
+    }else{
+        $sig = SIGUSR1;
+    }
+    if(!file_exists($pidFile)){
+        echo "pid file :{$pidFile} not exist ".PHP_EOL;
+        return;
+    }
+    $pid = file_get_contents($pidFile);
+    opCacheClear();
+    if(!swoole_process::kill($pid,0)){
+        echo "pid :{$pid} not exist ".PHP_EOL;
+        return;
+    }
+    swoole_process::kill($pid,$sig);
+    echo "send server reload command at ".date("y-m-d h:i:s").PHP_EOL;
+}
+
+function help($options){
+    $opName = '';
+    $args = array_keys($options);
+    if(isset($args[0])){
+        $opName = $args[0];
+    }
+    switch ($opName){
+        case 'start':{
+            echo "------------easySwoole 启动命令------------".PHP_EOL;
+            echo "执行php server.php start 即可启动服务。启动可选参数为:".PHP_EOL;
+            echo "--d                       是否以系统守护模式运行".PHP_EOL;
+            echo "--p-portNumber            指定服务监听端口".PHP_EOL;
+            echo "--pid-fileName            指定服务PID存储文件".PHP_EOL;
+            echo "--workerNum-num           设置worker进程数".PHP_EOL;
+            echo "--taskWorkerNum-num       设置Task进程数".PHP_EOL;
+            echo "--user-userName           指定以某个用户身份执行".PHP_EOL;
+            echo "--group-groupName         指定以某个用户组身份执行".PHP_EOL;
+            echo "--taskWorkerNum-num       设置Task进程数".PHP_EOL;
+            echo "--cpuAffinity-boolean     是否开启CPU亲和".PHP_EOL;
+            break;
+        }
+        case 'stop':{
+            echo "------------easySwoole 停止命令------------".PHP_EOL;
+            echo "执行php server.php stop 即可启动服务。启动可选参数为:".PHP_EOL;
+            echo "--pid-fileName        指定服务PID存储文件".PHP_EOL;
+            echo "--f                   强制停止服务".PHP_EOL;
+            break;
+        }
+        case 'reload':{
+            echo "------------easySwoole 重启命令------------".PHP_EOL;
+            echo "执行php server.php reload 即可启动服务。启动可选参数为:".PHP_EOL;
+            echo "--pid-fileName        指定服务PID存储文件".PHP_EOL;
+            echo "--pid-all             是否重启所有进程，默认true".PHP_EOL;
+            break;
+        }
+        default:{
+            echo "------------欢迎使用easySwoole------------".PHP_EOL;
+            echo "有关某个命令的详细信息，请使用 help 命令, 如help --start 可选参数为:".PHP_EOL;
+            echo "--start            启动easySwoole".PHP_EOL;
+            echo "--stop             停止easySwoole".PHP_EOL;
+            echo "--reload           重启easySwoole".PHP_EOL;
+        }
+    }
+}
+
+function evenCheck(){
+    if(version_compare(phpversion(),'5.6','<')){
+        die("php version must >= 5.6");
+    }
+    if(version_compare(phpversion('swoole'),'1.9.5','<')){
+        die("swoole version must >= 1.9.5");
+    }
+}
+function opCacheClear(){
+    if(function_exists('apc_clear_cache')){
+        apc_clear_cache();
+    }
+    if(function_exists('opcache_reset')){
+        opcache_reset();
+    }
+}
+evenCheck();
+commandHandler();
+
+
+
