@@ -1,6 +1,6 @@
 # TT PHP framework
 
-基于 phalcon 与 swoole 的高性能 PHP 框架（**开发中... 请勿使用**）
+基于 phalcon 与 swoole 的高性能 PHP api 框架（**开发中... 请勿使用**）
 
 
 ### 前序

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: safer
+ * Date: 2018/3/18
+ * Time: 1:05
+ */
 
 return [
     '_white_list' => [
