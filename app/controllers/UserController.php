@@ -14,7 +14,6 @@ class UserController extends ControllerBase
 {
     public function initialize()
     {
-        $this->tag->setTitle('user');
         parent::initialize();
     }
 
@@ -35,7 +34,9 @@ class UserController extends ControllerBase
         $data = [
             'info' => $userData,
         ];
-        header('Content-type: application/json');
+//        $this->response->setContentType("application/json");
+//        $this->response->setContent(\json_encode($data));
+//        $this->response->send();
         return \json_encode($data, JSON_UNESCAPED_UNICODE);
     }
 }

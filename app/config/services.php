@@ -10,10 +10,12 @@ use Phalcon\Cache\Backend\Libmemcached;
 use Phalcon\Cache\Frontend\Data as FrontData;
 use Phalcon\Session\Adapter\Libmemcached as SessionAdapter;
 use Phalcon\Events\Manager as EventsManager;
+use Phalcon\Mvc\Router;
+
 use TTDemo\Plugins\NotFoundPlugin;
 use TTDemo\Plugins\Acl\Resource;
 use TTDemo\Plugins\Acl\SecurityPlugin;
-use Phalcon\Mvc\Router;
+use TTDemo\Plugins\JwtPlugin;
 
 /**
  * The FactoryDefault Dependency Injector automatically register the right services providing a full stack framework
@@ -30,6 +32,9 @@ $di->setShared('eventsManager', $eventsManager);
  * We register the events manager
  */
 $di->setShared('dispatcher', function () use ($di, $eventsManager) {
+
+    $eventsManager->attach('dispatch:beforeDispatch', new JwtPlugin);
+
     $securityPlugin = new SecurityPlugin;
     $securityPlugin->setResources(new Resource);
 
@@ -62,7 +67,9 @@ $di->setShared('url', function () use ($config) {
 });
 
 $di->setShared('view', function() {
-    return new View;
+    $view =  new View;
+    $view->disable();
+    return $view;
 });
 
 /**

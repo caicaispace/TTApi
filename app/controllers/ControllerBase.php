@@ -8,8 +8,6 @@ class ControllerBase extends Controller
 {
     public function initialize()
     {
-        $this->tag->prependTitle('Phalcon Demo Application | ');
-        $this->view->setTemplateAfter('main');
     }
 
     public function forward($uri)

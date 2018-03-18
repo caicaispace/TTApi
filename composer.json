@@ -20,7 +20,8 @@
   "require": {
     "php": ">=5.4",
     "ext-phalcon": ">=2.0.9",
-    "ext-swoole": ">=1.9"
+    "ext-swoole": ">=1.9",
+    "firebase/php-jwt": "^5.0"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "~2.7",
