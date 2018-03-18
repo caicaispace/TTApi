@@ -15,8 +15,9 @@ class Resource implements ResourceInterface
     ];
 
     private $publicResources = [
-        'api'        => ['index', 'success_msg', 'erroe_msg'],
         'index'      => ['index'],
+        'api'        => ['index', 'success_msg', 'erroe_msg'],
+        'user'       => ['index', 'info', 'save', 'update', 'delete'],
         'register'   => ['index'],
         'errors'     => ['show401', 'show404', 'show500'],
         'session'    => ['index', 'register', 'start', 'end'],
