@@ -2,12 +2,13 @@
 
 namespace TTApiDemo\Controllers;
 
-class ErrorsController extends ControllerBase
+use Library\Base\AbstractInterface\AController;
+
+
+class ErrorsController extends AController
 {
     public function initialize()
     {
-        $this->tag->setTitle('Oops!');
-
         parent::initialize();
     }
 

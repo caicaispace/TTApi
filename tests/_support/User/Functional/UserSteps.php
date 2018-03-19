@@ -36,7 +36,7 @@ class UserSteps
     {
         $I = $this->tester;
 
-        return $I->haveRecord('TTDemo\Models\Users', $this->formFields);
+        return $I->haveRecord('TTApiDemo\Models\Users', $this->formFields);
     }
 
     /**
@@ -56,6 +56,10 @@ class UserSteps
         $I->amOnPage('/session/start');
     }
 
+    /**
+     * @param array $data
+     * @throws \Exception
+     */
     protected function fillFormFields(array $data)
     {
         foreach ($data as $field => $value) {

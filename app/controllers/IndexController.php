@@ -2,8 +2,10 @@
 
 namespace TTApiDemo\Controllers;
 
+use Library\Base\AbstractInterface\AController;
 
-class IndexController extends ControllerBase
+
+class IndexController extends AController
 {
     public function initialize()
     {

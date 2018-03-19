@@ -14,6 +14,7 @@ $loader->registerNamespaces(
         'TTApiDemo\Controllers' => DOCROOT . $config->get('application')->controllersDir,
         'TTApiDemo\Models'      => DOCROOT . $config->get('application')->modelsDir,
         'TTApiDemo\Plugins'     => DOCROOT . $config->get('application')->pluginsDir,
+        'TTApiDemo\Logics'      => DOCROOT . $config->get('application')->logicsDir,
         'Library'               => DOCROOT . $config->get('application')->libraryDir,
     ]
 );

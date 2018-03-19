@@ -1,13 +1,23 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: safer
+ * Date: 2018/3/19
+ * Time: 22:27
+ */
 
-namespace TTApiDemo\Controllers;
+namespace Library\Base\AbstractInterface;
 
 use Phalcon\Mvc\Controller;
+use Library\JSONResponse;
 
-class ControllerBase extends Controller
+class AController extends Controller
 {
+    public $response;
+
     public function initialize()
     {
+        $this->response = JSONResponse::getInstance();
     }
 
     public function forward($uri)

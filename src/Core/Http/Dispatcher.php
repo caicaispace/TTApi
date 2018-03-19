@@ -80,7 +80,8 @@ class Dispatcher
             return $phalconApplication;
         } else {
 //            $response->write($phalconApplication->handle()->getContent());
-            $response->writeJson(200, \json_decode($phalconApplication->handle()->getContent()));
+            $responseData = $phalconApplication->handle();
+            $response->writeJson(200, \json_decode($responseData->getContent()));
         }
     }
 

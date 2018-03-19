@@ -8,13 +8,12 @@
 
 namespace TTApiDemo\Controllers;
 
+use Library\Base\AbstractInterface\AController;
 
-class ApiController extends ControllerBase
+class ApiController extends AController
 {
     public function initialize()
     {
-        $this->tag->setTitle('api');
-
         parent::initialize();
     }
 
