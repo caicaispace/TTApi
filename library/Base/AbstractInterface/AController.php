@@ -9,7 +9,7 @@
 namespace Library\Base\AbstractInterface;
 
 use Phalcon\Mvc\Controller;
-use Library\JSONResponse;
+use Library\Response;
 
 class AController extends Controller
 {
@@ -17,7 +17,7 @@ class AController extends Controller
 
     public function initialize()
     {
-        $this->response = JSONResponse::getInstance();
+        $this->response = Response::getInstance();
     }
 
     public function forward($uri)

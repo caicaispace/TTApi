@@ -85,12 +85,7 @@ class Response extends HttpResponse
     }
     function writeJson($statusCode = 200,$result = null,$msg = null){
         if(!$this->isEndResponse()){
-            $data = Array(
-                "code"=>$statusCode,
-                "result"=>$result,
-                "msg"=>$msg
-            );
-            $this->getBody()->write(json_encode($data,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
+            $this->getBody()->write(json_encode($result,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
             $this->withHeader('Content-type','application/json;charset=utf-8');
             $this->withStatus($statusCode);
             return true;

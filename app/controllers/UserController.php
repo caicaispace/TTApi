@@ -26,10 +26,7 @@ class UserController extends AController implements IController
         if ($user = $logic->getList()) {
             $userData = $user->toArray();
         }
-        $data = [
-            'data' => $userData,
-        ];
-        $this->response->setJsonContent($data);
+        $this->response->setListData($userData);
         $this->response->send();
     }
 
@@ -40,10 +37,7 @@ class UserController extends AController implements IController
         if ($user = $logic->getInfo()) {
             $userData = $user->toArray();
         }
-        $data = [
-            'data' => $userData,
-        ];
-        $this->response->setJsonContent($data);
+        $this->response->setRowData($userData);
         $this->response->send();
     }
 
