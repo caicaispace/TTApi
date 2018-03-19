@@ -18,7 +18,6 @@ class Response extends PhalconResponse
     private $fieldsMap = null;
     private $page = null;
     private $message = '操作成功';
-    private $code = 200;
     private $timestamp = null;
 
     protected static $instance;
@@ -128,10 +127,13 @@ class Response extends PhalconResponse
         return $this->send();
     }
 
-    public function setStatusCode($code, $message = null)
+    public function getStatusCode()
     {
-        $this->code = $code;
-        parent::setStatusCode($code, $message);
+        if (NULL === $code = parent::getStatusCode()) {
+            return 200;
+        } else {
+            return parent::getStatusCode();
+        }
     }
 
     private function extendedContent()
@@ -145,7 +147,7 @@ class Response extends PhalconResponse
                 'uniqueId' => $this->uniqueId,
                 'fields'   => $this->fieldsMap,
             ),
-            'code' => $this->code,
+            'code' => $this->getStatusCode(),
             'message' => $this->message,
             'timestamp' => $this->timestamp,
         );
