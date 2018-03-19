@@ -98,6 +98,15 @@ class Response extends PhalconResponse
     }
 
     /**
+     * @return $this
+     */
+    public function resetTimestamp()
+    {
+        $this->setTimestamp();
+        return $this;
+    }
+
+    /**
      * @param string $message
      * @return Response|PhalconResponse
      */
