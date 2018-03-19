@@ -31,7 +31,6 @@ class Response extends PhalconResponse
 
     public function __construct($content = null, $code = null, $status = null)
     {
-        $this->setTimestamp();
         parent::__construct($content, $code, $status);
     }
 
@@ -128,6 +127,7 @@ class Response extends PhalconResponse
 
     private function extendedContent()
     {
+        $this->setTimestamp();
         $content = array(
             'info' => $this->rowData,
             'list' => $this->listData,
