@@ -6,7 +6,7 @@
  * Time: 14:42
  */
 
-namespace TTDemo\Controllers;
+namespace TTApiDemo\Controllers;
 
 
 class ApiController extends ControllerBase

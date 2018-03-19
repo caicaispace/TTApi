@@ -1,6 +1,6 @@
 <?php
 
-namespace TTDemo\Plugins\Acl\Resource;
+namespace TTApiDemo\Plugins\Acl\Resource;
 
 interface ResourceInterface
 {

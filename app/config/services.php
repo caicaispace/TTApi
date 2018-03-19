@@ -12,10 +12,10 @@ use Phalcon\Session\Adapter\Libmemcached as SessionAdapter;
 use Phalcon\Events\Manager as EventsManager;
 use Phalcon\Mvc\Router;
 
-use TTDemo\Plugins\NotFoundPlugin;
-use TTDemo\Plugins\Acl\Resource;
-use TTDemo\Plugins\Acl\SecurityPlugin;
-use TTDemo\Plugins\JwtPlugin;
+use TTApiDemo\Plugins\NotFoundPlugin;
+use TTApiDemo\Plugins\Acl\Resource;
+use TTApiDemo\Plugins\Acl\SecurityPlugin;
+use TTApiDemo\Plugins\JWTPlugin;
 
 /**
  * The FactoryDefault Dependency Injector automatically register the right services providing a full stack framework
@@ -33,7 +33,7 @@ $di->setShared('eventsManager', $eventsManager);
  */
 $di->setShared('dispatcher', function () use ($di, $eventsManager) {
 
-    $eventsManager->attach('dispatch:beforeDispatch', new JwtPlugin);
+    $eventsManager->attach('dispatch:beforeDispatch', new JWTPlugin);
 
     $securityPlugin = new SecurityPlugin;
     $securityPlugin->setResources(new Resource);
@@ -50,7 +50,7 @@ $di->setShared('dispatcher', function () use ($di, $eventsManager) {
 
     $dispatcher = new Dispatcher;
 
-    $dispatcher->setDefaultNamespace('TTDemo\Controllers');
+    $dispatcher->setDefaultNamespace('TTApiDemo\Controllers');
     $dispatcher->setEventsManager($eventsManager);
 
     return $dispatcher;
@@ -115,29 +115,6 @@ $di->setShared('cacheMemcache', function () {
         ]
     );
     return $cache;
-});
-
-//Isolating the session data
-$di->setShared('session', function () use ($config) {
-    $session = new SessionAdapter(
-        [
-            "servers" => [
-                [
-                    "host"   => '127.0.0.1',
-                    "port"   => 11211,
-                    "weight" => 1,
-                ],
-            ],
-            "client" => [
-                \Memcached::OPT_HASH       => \Memcached::HASH_MD5,
-                \Memcached::OPT_PREFIX_KEY => "prefix.",
-            ],
-            "lifetime" => 86400,
-            "prefix"   => 'home_',
-        ]
-    );
-    $session->start();
-    return $session;
 });
 
 /**

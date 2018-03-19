@@ -1,6 +1,6 @@
 <?php
 
-namespace TTDemo\Models;
+namespace TTApiDemo\Models;
 
 use Phalcon\Mvc\Model;
 use Phalcon\Db\RawValue;

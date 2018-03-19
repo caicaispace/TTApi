@@ -6,9 +6,9 @@
  * Time: 13:32
  */
 
-namespace TTDemo\Controllers;
+namespace TTApiDemo\Controllers;
 
-use TTDemo\Models\Users;
+use TTApiDemo\Models\Users;
 
 class UserController extends ControllerBase
 {

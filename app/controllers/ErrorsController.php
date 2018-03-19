@@ -1,6 +1,6 @@
 <?php
 
-namespace TTDemo\Controllers;
+namespace TTApiDemo\Controllers;
 
 class ErrorsController extends ControllerBase
 {
