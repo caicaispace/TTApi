@@ -17,7 +17,8 @@ use Core\Component\SuperClosure;
 use Core\Component\SysConst;
 use Core\Http\Dispatcher as HttpDispatcher;
 use Core\Http\Request as HttpRequest;
-use Core\Http\Response as HttpResponse;
+//use Core\Http\Response as HttpResponse;
+use Library\Http\Response as HttpResponse;
 use Core\Swoole\Pipe\Dispatcher as PipeDispatcher;
 
 class Server
@@ -84,6 +85,7 @@ class Server
     function getServer(){
         return $this->swooleServer;
     }
+
     /**
      * 设置 phalcon mvc application
      * @param $phalconApplication

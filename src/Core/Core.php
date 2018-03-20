@@ -18,7 +18,8 @@ use Core\Component\Error\Trigger;
 //use Core\Component\Spl\SplError;
 use Core\Component\SysConst;
 use Core\Http\Request;
-use Core\Http\Response;
+//use Core\Http\Response;
+use Library\Http\Response;
 use Core\Swoole\Server;
 use Core\Utility\File;
 
@@ -67,7 +68,8 @@ class Core
     }
 
     private function defineSysConst(){
-        defined('ROOT') or define('ROOT',realpath(__DIR__.'/../'));
+        defined('ROOT') or define('ROOT',realpath(__DIR__.'/../../'));
+        var_dump(ROOT);
         defined('USER') or define('USER',trim(shell_exec('whoami')));
         defined('USER_GROUP') or define('USER_GROUP',trim(shell_exec('groups '.USER)));
     }
@@ -104,9 +106,10 @@ class Core
         $loader = AutoLoader::getInstance();
         $loader->registerNamespaces(
             [
-                'Core' => ROOT . "/Core/",
-                'Conf' => ROOT . "/Conf/",
-                'Base' => ROOT . "/Base/",
+                'Core' => ROOT . "/src/Core/",
+                'Conf' => ROOT . "/src/Conf/",
+                'Base' => ROOT . "/src/Base/",
+                'Library' => ROOT . "/library/",
             ]
         );
         $loader->register();

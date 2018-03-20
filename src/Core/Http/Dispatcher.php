@@ -17,6 +17,7 @@ use Core\Component\Di;
 use Core\Component\SysConst;
 use Core\Http\Message\Status;
 use Core\Swoole\Server;
+use Library\Http\Response;
 
 
 class Dispatcher
@@ -57,9 +58,8 @@ class Dispatcher
         if ($request2->server['request_uri'] == '/favicon.ico' || $request2->server['path_info'] == '/favicon.ico') {
             return $response->end(true);
         }
-        $_SERVER = $request2->server;
+        $_SERVER = $request2->server + $_SERVER;
         $_COOKIE = $request2->cookie;
-//        var_dump($_SERVER);
 
         //构造url请求路径,phalcon获取到$_GET['_url']时会定向到对应的路径，否则请求路径为'/'
         $_GET['_url'] = $request2->server['request_uri'];
@@ -80,8 +80,13 @@ class Dispatcher
             return $phalconApplication;
         } else {
 //            $response->write($phalconApplication->handle()->getContent());
-            $responseData = $phalconApplication->handle();
-            $response->writeJson(200, \json_decode($responseData->getContent()));
+            $phalconApplicationResponse = $phalconApplication->handle();
+            $content = \json_decode($phalconApplicationResponse->getContent());
+//            $statusCode = \json_decode($phalconApplicationResponse->getStatusCode());
+//            $message = \json_decode($phalconApplicationResponse->getMessages());
+            $response->setJsonContent($content);
+//            $response->setStatusCode($statusCode);
+//            $response->send();
         }
     }
 

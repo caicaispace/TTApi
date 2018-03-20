@@ -12,7 +12,8 @@ namespace Core\Component\Error;
 use Core\AbstractInterface\ErrorHandlerInterface;
 use Core\Component\Logger;
 use Core\Http\Request;
-use Core\Http\Response;
+//use Core\Http\Response;
+use Library\Http\Response;
 
 class ErrorHandler  implements ErrorHandlerInterface
 {
@@ -26,7 +27,8 @@ class ErrorHandler  implements ErrorHandlerInterface
         // TODO: Implement display() method.
         //判断是否在HTTP模式下
         if(Request::getInstance()){
-            Response::getInstance()->write($msg ." in file {$file} line {$line}");
+            Response::getInstance()->setContent($msg ." in file {$file} line {$line}");
+//            Response::getInstance()->write($msg ." in file {$file} line {$line}");
         }else{
             Logger::getInstance('error')->console($msg." in file {$file} line {$line}",false);
         }

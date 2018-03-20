@@ -12,6 +12,7 @@ use Core\AbstractInterface\AbstractEvent;
 use Core\Component\Di;
 use Core\Http\Request;
 use Core\Http\Response;
+use Library\Http\Response as HttpResponse;
 use Core\AutoLoader;
 
 
@@ -20,7 +21,7 @@ class Event extends AbstractEvent
     function frameInitialize()
     {
         // TODO: Implement frameInitialize() method.
-        date_default_timezone_set('Asia/Shanghai');
+//        date_default_timezone_set('Asia/Shanghai');
 
         // MysqliDb loader
 //        AutoLoader::getInstance()->requireFile("App/Vendor/Db/MysqliDb.php");
@@ -79,10 +80,9 @@ class Event extends AbstractEvent
         // TODO: Implement onWorkerStop() method.
     }
 
-    function onRequest(Request $request, Response $response)
+    function onRequest(Request $request, HttpResponse $response)
     {
         // TODO: Implement onRequest() method.
-//        $response->writeJson('goodluck');
     }
 
     function onDispatcher(Request $request, Response $response, $targetControllerClass, $targetAction)
@@ -90,7 +90,7 @@ class Event extends AbstractEvent
         // TODO: Implement onDispatcher() method.
     }
 
-    function onResponse(Request $request,Response $response)
+    function onResponse(Request $request,HttpResponse $response)
     {
         // TODO: Implement afterResponse() method.
     }
@@ -115,6 +115,7 @@ class Event extends AbstractEvent
         if ($workerId == 0) {
             \Core\Swoole\Timer::loop(3000, function(){
                 \Core\Swoole\Server::getInstance()->getServer()->reload();
+                echo 'server reloaded'.PHP_EOL;
             });
         }
 

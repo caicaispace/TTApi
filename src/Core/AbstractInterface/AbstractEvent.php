@@ -11,6 +11,7 @@ namespace Core\AbstractInterface;
 
 use Core\Http\Request;
 use Core\Http\Response;
+use Library\Http\Response as HttpResponse;
 
 abstract class AbstractEvent
 {
@@ -70,9 +71,9 @@ abstract class AbstractEvent
     * 每个worker进程启动均会执行该函数，6个worker就执行6次
     */
     abstract function onWorkerStop(\swoole_server $server,$workerId);
-    abstract function onRequest(Request $request,Response $response);
+    abstract function onRequest(Request $request,HttpResponse $response);
     abstract function onDispatcher(Request $request,Response $response,$targetControllerClass,$targetAction);
-    abstract function onResponse(Request $request,Response $response);
+    abstract function onResponse(Request $request,HttpResponse $response);
     abstract function onTask(\swoole_server $server, $taskId, $workerId,$callBackObj);
     abstract function onFinish(\swoole_server $server, $taskId,$callBackObj);
     abstract function onWorkerError(\swoole_server $server,$worker_id,$worker_pid,$exit_code);

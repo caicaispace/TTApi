@@ -6,12 +6,20 @@
  * Time: 22:43
  */
 
-namespace Library;
+namespace Library\Http;
 
 use Phalcon\Http\Response as PhalconResponse;
 
 class Response extends PhalconResponse
 {
+    // swoole
+    const STATUS_NOT_END = 0;
+    const STATUS_LOGICAL_END = 1;
+    const STATUS_REAL_END = 2;
+    private $swoole_http_response = null;
+    private $isEndResponse = 0;//1 逻辑end  2真实end
+
+    //
     private $uniqueId = null;
     private $rowData = null;
     private $listData = null;
@@ -20,16 +28,18 @@ class Response extends PhalconResponse
     private $message = '操作成功';
     private $timestamp = null;
 
+
     protected static $instance;
-    static function getInstance(){
+    static function getInstance(\swoole_http_response $response = null, ...$ags){
         if(!isset(self::$instance)){
-            self::$instance = new static();
+            self::$instance = new static($response, $ags);
         }
         return self::$instance;
     }
 
-    public function __construct($content = null, $code = null, $status = null)
+    public function __construct(\swoole_http_response $response = null, $content = null, $code = null, $status = null)
     {
+        $this->swoole_http_response = $response;
         parent::__construct($content, $code, $status);
     }
 
@@ -39,11 +49,20 @@ class Response extends PhalconResponse
     }
 
     /**
+     * @return null
+     */
+    public function getSwooleHttpResponse()
+    {
+        return $this->swoole_http_response;
+    }
+
+    /**
      * @param $row
      * @return $this
      */
     public function setRowData($row)
     {
+        $this->listData = null;
         $this->rowData = $row;
         return $this;
     }
@@ -54,6 +73,7 @@ class Response extends PhalconResponse
      */
     public function setListData($list)
     {
+        $this->rowData = null;
         $this->listData = $list;
         return $this;
     }
@@ -132,8 +152,64 @@ class Response extends PhalconResponse
         if (NULL === $code = parent::getStatusCode()) {
             return 200;
         } else {
-            return parent::getStatusCode();
+            return $code;
         }
+    }
+
+    public function send()
+    {
+        $this->extendedContent();
+        if (PHP_SAPI === 'cli') {
+            $this->sendHeaders();
+            /**
+             * Output the response body
+             */
+            $content = $this->_content;
+            if ($content != null) {
+//                echo $content;
+                $this->swoole_http_response->write($content);
+            } else {
+                $file = $this->_file;
+                if (is_string($file) && strlen($file)) {
+                    readfile($file);
+                }
+            }
+            return $this;
+        }
+        return parent::send();
+    }
+
+    function end($realEnd = false){
+        if($this->isEndResponse == self::STATUS_NOT_END){
+            $this->isEndResponse = self::STATUS_LOGICAL_END;
+        }
+        if($realEnd === true && $this->isEndResponse !== self::STATUS_REAL_END){
+            $this->isEndResponse = self::STATUS_REAL_END;
+            //结束处理
+            $status = $this->getStatusCode();
+            $this->swoole_http_response->status($status);
+            $headers = $this->getHeaders();
+//            var_dump($headers);
+//            foreach ($headers as $header => $val){
+//                foreach ($val as $sub){
+//                    $this->swoole_http_response->header($header,$sub);
+//                }
+//            }
+            $cookies = $this->getCookies();
+//            var_dump($cookies);
+//            foreach ($cookies as $cookie){
+//                $this->swoole_http_response->cookie($cookie->getName(),$cookie->getValue(),$cookie->getExpire(),$cookie->getPath(),$cookie->getDomain(),$cookie->getSecure(),$cookie->getHttponly());
+//            }
+            $write = $this->getContent();
+            if(!empty($write)){
+                $this->swoole_http_response->write($write);
+            }
+            $this->swoole_http_response->end();
+        }
+    }
+
+    function isEndResponse(){
+        return $this->isEndResponse;
     }
 
     private function extendedContent()
@@ -152,28 +228,5 @@ class Response extends PhalconResponse
             'timestamp' => $this->timestamp,
         );
         parent::setJsonContent($content);
-    }
-
-    public function send()
-    {
-        $this->extendedContent();
-        if (FALSE) {
-            // TODO: fpm 模式
-            return parent::send();
-        }
-        $this->sendHeaders();
-		/**
-         * Output the response body
-         */
-		$content = $this->_content;
-		if ($content != null) {
-            echo $content;
-        } else {
-            $file = $this->_file;
-			if (is_string($file) && strlen($file)) {
-                readfile($file);
-			}
-		}
-		return $this;
     }
 }

@@ -9,7 +9,7 @@
 namespace Library\Base\AbstractInterface;
 
 use Phalcon\Mvc\Controller;
-use Library\Response;
+use Library\Http\Response;
 
 class AController extends Controller
 {

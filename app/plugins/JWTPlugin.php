@@ -24,6 +24,7 @@ class JWTPlugin
      */
     public function beforeDispatch(Event $event, Dispatcher $dispatcher)
     {
+
         return true;
 
         /**

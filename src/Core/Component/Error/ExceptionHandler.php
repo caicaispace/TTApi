@@ -12,7 +12,8 @@ namespace Core\Component\Error;
 use Core\AbstractInterface\ExceptionHandlerInterface;
 use Core\Component\Logger;
 use Core\Http\Request;
-use Core\Http\Response;
+//use Core\Http\Response;
+use Library\Http\Response;
 
 class ExceptionHandler implements ExceptionHandlerInterface
 {
@@ -26,7 +27,8 @@ class ExceptionHandler implements ExceptionHandlerInterface
     {
         // TODO: Implement display() method.
         if(Request::getInstance()){
-            Response::getInstance()->write(nl2br($exception->getMessage().$exception->getTraceAsString()));
+            Response::getInstance()->setContent(nl2br($exception->getMessage().$exception->getTraceAsString()));
+//            Response::getInstance()->write(nl2br($exception->getMessage().$exception->getTraceAsString()));
         }else{
             Logger::getInstance('error')->console($exception->getMessage().$exception->getTraceAsString(),false);
         }

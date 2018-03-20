@@ -11,6 +11,7 @@ namespace TTApiDemo\Controllers;
 use Library\Base\AbstractInterface\AController;
 use Library\Base\AbstractInterface\IController;
 use TTApiDemo\Logics\UserLogic;
+use Library\Response;
 
 class UserController extends AController implements IController
 {
