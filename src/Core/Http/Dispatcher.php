@@ -17,7 +17,7 @@ use Core\Component\Di;
 use Core\Component\SysConst;
 use Core\Http\Message\Status;
 use Core\Swoole\Server;
-use Library\Http\Response;
+use Library\Http\Response as HttpResponse;
 
 
 class Dispatcher
@@ -40,11 +40,11 @@ class Dispatcher
     }
 
     function dispatch(){
-        if(Response::getInstance()->isEndResponse()){
+        if(HttpResponse::getInstance()->isEndResponse()){
             return false;
         }
         $request = Request::getInstance();
-        $response = Response::getInstance();
+        $response = HttpResponse::getInstance();
         $request2 = $request->getSwooleRequest();
         $phalconApplication = Server::getInstance()->getPhalconApplication();
 
@@ -79,14 +79,9 @@ class Dispatcher
         if (APPLICATION_ENV == APP_TEST) {
             return $phalconApplication;
         } else {
-//            $response->write($phalconApplication->handle()->getContent());
             $phalconApplicationResponse = $phalconApplication->handle();
-            $content = \json_decode($phalconApplicationResponse->getContent());
-//            $statusCode = \json_decode($phalconApplicationResponse->getStatusCode());
-//            $message = \json_decode($phalconApplicationResponse->getMessages());
+            $content = \json_decode($phalconApplicationResponse->getContent(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
             $response->setJsonContent($content);
-//            $response->setStatusCode($statusCode);
-//            $response->send();
         }
     }
 

@@ -31,8 +31,10 @@ class Response extends PhalconResponse
 
     protected static $instance;
     static function getInstance(\swoole_http_response $response = null, ...$ags){
-        if(!isset(self::$instance)){
-            self::$instance = new static($response, $ags);
+        if($response !== null AND PHP_SAPI === 'cli'){
+            self::$instance = new static($response);
+        }elseif(!isset(self::$instance)){
+            self::$instance = new static();
         }
         return self::$instance;
     }
@@ -166,8 +168,7 @@ class Response extends PhalconResponse
              */
             $content = $this->_content;
             if ($content != null) {
-//                echo $content;
-                $this->swoole_http_response->write($content);
+                echo $content;
             } else {
                 $file = $this->_file;
                 if (is_string($file) && strlen($file)) {
@@ -187,15 +188,13 @@ class Response extends PhalconResponse
             $this->isEndResponse = self::STATUS_REAL_END;
             //结束处理
             $status = $this->getStatusCode();
+            echo 'status' . $status . PHP_EOL;
             $this->swoole_http_response->status($status);
-            $headers = $this->getHeaders();
-//            var_dump($headers);
-//            foreach ($headers as $header => $val){
-//                foreach ($val as $sub){
-//                    $this->swoole_http_response->header($header,$sub);
-//                }
-//            }
-            $cookies = $this->getCookies();
+            $headers = $this->getHeaders()->toArray();
+            foreach ($headers as $header => $val){
+                $this->swoole_http_response->header($header,$val);
+            }
+//            $cookies = $this->getCookies();
 //            var_dump($cookies);
 //            foreach ($cookies as $cookie){
 //                $this->swoole_http_response->cookie($cookie->getName(),$cookie->getValue(),$cookie->getExpire(),$cookie->getPath(),$cookie->getDomain(),$cookie->getSecure(),$cookie->getHttponly());

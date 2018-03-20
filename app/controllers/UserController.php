@@ -11,7 +11,6 @@ namespace TTApiDemo\Controllers;
 use Library\Base\AbstractInterface\AController;
 use Library\Base\AbstractInterface\IController;
 use TTApiDemo\Logics\UserLogic;
-use Library\Response;
 
 class UserController extends AController implements IController
 {
@@ -27,6 +26,7 @@ class UserController extends AController implements IController
         if ($user = $logic->getList()) {
             $userData = $user->toArray();
         }
+        $this->response->setStatusCode(400);
         $this->response->setListData($userData);
         $this->response->send();
     }

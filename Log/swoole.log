@@ -358,3 +358,7 @@
 [2018-03-20 18:27:47 *4959.5]	WARNING	swWorker_onStart: get group [root : root] info failed.
 [2018-03-20 18:27:47 *4960.6]	WARNING	swWorker_onStart: get group [root : root] info failed.
 [2018-03-20 18:27:47 *4961.7]	WARNING	swWorker_onStart: get group [root : root] info failed.
+[2018-03-20 22:34:14 *8787.2]	ERROR	zm_deactivate_swoole (ERROR 503): Fatal error: Call to a member function status() on null in /home/www/TTApi/library/Http/Response.php on line 192.
+[2018-03-20 22:34:14 $8774.0]	WARNING	swManager_check_exit_status: worker#2 abnormal exit, status=255, signal=0
+[2018-03-20 22:34:41 *8819.2]	ERROR	zm_deactivate_swoole (ERROR 503): Fatal error: Call to a member function status() on null in /home/www/TTApi/library/Http/Response.php on line 192.
+[2018-03-20 22:34:41 $8806.0]	WARNING	swManager_check_exit_status: worker#2 abnormal exit, status=255, signal=0
