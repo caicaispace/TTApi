@@ -16,7 +16,7 @@ use Core\Component\RPC\Common\Config;
 use Core\Component\RPC\Common\Package;
 use Core\Component\Socket\Client\TcpClient;
 use Core\Component\Socket\Response;
-use \Core\Swoole\Server as SwooleServer;
+use Core\Swoole\Server as SwooleServer;
 
 class Server
 {
