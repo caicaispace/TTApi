@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yf
- * Date: 2017/1/22
- * Time: 下午9:54
- */
 
 namespace Core;
 
@@ -69,7 +63,6 @@ class Core
 
     private function defineSysConst(){
         defined('ROOT') or define('ROOT',realpath(__DIR__.'/../../'));
-        var_dump(ROOT);
         defined('USER') or define('USER',trim(shell_exec('whoami')));
         defined('USER_GROUP') or define('USER_GROUP',trim(shell_exec('groups '.USER)));
     }

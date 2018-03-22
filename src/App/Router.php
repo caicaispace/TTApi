@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yf
- * Date: 2017/6/30
- * Time: 下午11:55
- */
 
 namespace App;
 

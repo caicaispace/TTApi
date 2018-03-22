@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: YF
- * Date: 16/8/25
- * Time: 上午12:05
- */
 namespace Conf;
 
 use Core\Component\Di;

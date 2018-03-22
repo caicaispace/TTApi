@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yf
- * Date: 2017/10/19
- * Time: 下午2:34
- */
 
 namespace Core\Component\RPC\Common;
 

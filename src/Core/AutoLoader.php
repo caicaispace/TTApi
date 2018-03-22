@@ -1,15 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: aofeide
- * Date: 2018/3/9
- * Time: 上午9:46
- */
+
 namespace Core;
 
 use Phalcon\Loader;
+use Phalcon\Events\EventsAwareInterface;
 
-class AutoLoader extends Loader
+class AutoLoader extends Loader implements EventsAwareInterface
 {
     protected static $instance;
     static function getInstance(){

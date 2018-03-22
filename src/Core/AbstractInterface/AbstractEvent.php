@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yf
- * Date: 2017/1/22
- * Time: 下午11:57
- */
 
 namespace Core\AbstractInterface;
 

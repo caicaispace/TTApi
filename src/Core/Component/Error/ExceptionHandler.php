@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yf
- * Date: 2017/11/9
- * Time: 下午7:05
- */
 
 namespace Core\Component\Error;
 

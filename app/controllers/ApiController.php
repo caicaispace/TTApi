@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: safer
- * Date: 2018/3/17
- * Time: 14:42
- */
 
 namespace TTApiDemo\Controllers;
 

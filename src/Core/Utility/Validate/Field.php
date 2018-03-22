@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yf
- * Date: 2017/9/3
- * Time: 下午9:37
- */
 
 namespace Core\Utility\Validate;
 

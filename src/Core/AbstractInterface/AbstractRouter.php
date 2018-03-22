@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yf
- * Date: 2017/2/3
- * Time: 下午8:21
- */
 
 namespace Core\AbstractInterface;
 use Core\Http\Request;

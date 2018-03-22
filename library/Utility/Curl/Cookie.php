@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yf
- * Date: 2017/10/22
- * Time: 下午10:50
- */
 
 namespace Library\Utility\Curl;
 

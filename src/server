@@ -1,11 +1,5 @@
 #!/usr/bin/env php
 <?php
-/**
- * Created by PhpStorm.
- * User: yf
- * Date: 2017/1/22
- * Time: 下午9:46
- */
 
 require_once 'Core/Core.php';
 require_once realpath(dirname(dirname(__FILE__))) . '/app/config/env.php';

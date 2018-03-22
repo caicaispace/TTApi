@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yf
- * Date: 2017/9/27
- * Time: 上午11:58
- */
 
 namespace App\Controller\WebSocket;
 

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yf
- * Date: 2017/9/13
- * Time: 上午12:03
- */
 
 namespace App\Controller\Rest;
 

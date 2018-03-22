@@ -1,4 +1,5 @@
 <?php
+
 namespace Conf;
 
 use Core\Swoole\Server;

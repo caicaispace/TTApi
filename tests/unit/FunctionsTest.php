@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: aofeide
- * Date: 2018/3/15
- * Time: 上午11:24
- */
 
 namespace App\Test\Unit;
 

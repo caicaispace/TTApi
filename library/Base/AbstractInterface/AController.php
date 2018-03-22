@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: safer
- * Date: 2018/3/19
- * Time: 22:27
- */
 
 namespace Library\Base\AbstractInterface;
 

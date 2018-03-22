@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yf
- * Date: 2017/1/23
- * Time: 上午12:06
- */
 
 namespace Conf;
 
@@ -21,35 +15,30 @@ class Event extends AbstractEvent
     function frameInitialize()
     {
 //        date_default_timezone_set('Asia/Shanghai');
-
-        // MysqliDb loader
+//        /*MysqliDb loader*/
 //        AutoLoader::getInstance()->requireFile("App/Vendor/Db/MysqliDb.php");
-
-        // composer loader
+//        /*composer loader*/
 //        AutoLoader::getInstance()->requireFile('vendor/autoload.php');
     }
 
     function frameInitialized()
     {
-//        // mysql
+//        /*mysql*/
 //        $mysqlConfig = Config::getInstance()->getConf('MYSQL');
 //        Di::getInstance()->set('MYSQL', MysqliDb::class, $mysqlConfig);
-
-//        // redis
+//        /*redis*/
 //        $redisConfig = Config::getInstance()->getConf("REDIS");
 //        Di::getInstance()->set('REDIS', RedisDb::class, $redisConfig);
     }
 
     function beforeWorkerStart(\swoole_server $server)
     {
-//         直播
-//         \Conf\Live::getInstance()->beforeWorkerStart($server);
-
-        // WebSocket
+//        /*直播*/
+//        \Conf\Live::getInstance()->beforeWorkerStart($server);
+//        /*WebSocket*/
 //        \Conf\WebSocket::getInstance()->beforeWorkerStart($server);
-
-        // WebSocketCommandParser
-        // \Conf\WebSocketCommandParser::getInstance()->beforeWorkerStart($server);
+//        /*WebSocketCommandParser*/
+//        \Conf\WebSocketCommandParser::getInstance()->beforeWorkerStart($server);
     }
 
     function onStart(\swoole_server $server)
@@ -106,9 +95,9 @@ class Event extends AbstractEvent
             return $cache;
         });
 
-        // WebSocketCommandParser
-        // \Conf\WebSocketCommandParser::getInstance()->onWorkerStart($server, $workerId);
-
+//        /*WebSocketCommandParser*/
+//        \Conf\WebSocketCommandParser::getInstance()->onWorkerStart($server, $workerId);
+//        /*hotReload*/
 //        $this->_hotReload($server, $workerId);
     }
 
