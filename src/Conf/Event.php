@@ -68,7 +68,6 @@ class Event extends AbstractEvent
             ];
             return new $dbClass($config);
         });
-
         $di->setShared('cacheMemcache', function () {
             $frontCache = new \Phalcon\Cache\Frontend\Data(
                 [
@@ -94,7 +93,6 @@ class Event extends AbstractEvent
             );
             return $cache;
         });
-
 //        /*WebSocketCommandParser*/
 //        \Conf\WebSocketCommandParser::getInstance()->onWorkerStart($server, $workerId);
 //        /*hotReload*/
