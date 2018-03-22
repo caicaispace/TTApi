@@ -20,7 +20,6 @@ class Event extends AbstractEvent
 {
     function frameInitialize()
     {
-        // TODO: Implement frameInitialize() method.
 //        date_default_timezone_set('Asia/Shanghai');
 
         // MysqliDb loader
@@ -43,8 +42,6 @@ class Event extends AbstractEvent
 
     function beforeWorkerStart(\swoole_server $server)
     {
-        // TODO: Implement beforeWorkerStart() method.
-
 //         直播
 //         \Conf\Live::getInstance()->beforeWorkerStart($server);
 
@@ -57,17 +54,57 @@ class Event extends AbstractEvent
 
     function onStart(\swoole_server $server)
     {
-        // TODO: Implement onStart() method.
     }
 
     function onShutdown(\swoole_server $server)
     {
-        // TODO: Implement onShutdown() method.
     }
 
     function onWorkerStart(\swoole_server $server, $workerId)
     {
-        // TODO: Implement onWorkerStart() method.
+        /**
+         * Database connection is created based in the parameters defined in the configuration file
+         */
+        $di = Di::getInstance()->getPhalconAppDi();
+        $config = $di->getShared('config');
+        $di->setShared('db', function () use ($config) {
+            $config = $config->get('database')->toArray();
+            $dbClass = 'Phalcon\Db\Adapter\Pdo\\' . $config['adapter'];
+            unset($config['adapter']);
+            $config += [
+                "options"  => [ //长连接配置
+                    \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8mb4'",
+                    \PDO::ATTR_PERSISTENT => true,//长连接
+                ]
+            ];
+            return new $dbClass($config);
+        });
+
+        $di->setShared('cacheMemcache', function () {
+            $frontCache = new \Phalcon\Cache\Frontend\Data(
+                [
+                    "lifetime" => 86400,
+                ]
+            );
+            $cache = new \Phalcon\Cache\Backend\Libmemcached(
+                $frontCache,
+                [
+                    "servers" => [
+                        [
+                            "host"   => '127.0.0.1',
+                            "port"   => 11211,
+                            "weight" => 1,
+                        ],
+                    ],
+                    "client" => [
+                        \Memcached::OPT_HASH       => \Memcached::HASH_MD5,
+                        \Memcached::OPT_PREFIX_KEY => "prefix.",
+                    ],
+                    "prefix"   => 'home_',
+                ]
+            );
+            return $cache;
+        });
 
         // WebSocketCommandParser
         // \Conf\WebSocketCommandParser::getInstance()->onWorkerStart($server, $workerId);
@@ -77,37 +114,30 @@ class Event extends AbstractEvent
 
     function onWorkerStop(\swoole_server $server, $workerId)
     {
-        // TODO: Implement onWorkerStop() method.
     }
 
     function onRequest(Request $request, HttpResponse $response)
     {
-        // TODO: Implement onRequest() method.
     }
 
     function onDispatcher(Request $request, Response $response, $targetControllerClass, $targetAction)
     {
-        // TODO: Implement onDispatcher() method.
     }
 
     function onResponse(Request $request,HttpResponse $response)
     {
-        // TODO: Implement afterResponse() method.
     }
 
     function onTask(\swoole_server $server, $taskId, $workerId, $taskObj)
     {
-        // TODO: Implement onTask() method.
     }
 
     function onFinish(\swoole_server $server, $taskId, $taskObj)
     {
-        // TODO: Implement onFinish() method.
     }
 
     function onWorkerError(\swoole_server $server, $worker_id, $worker_pid, $exit_code)
     {
-        // TODO: Implement onWorkerError() method.
     }
 
     private function _hotReload(\swoole_server $server, $workerId)

@@ -91,7 +91,7 @@ class Core
         //创建日志目录
         $logDir = Di::getInstance()->get(SysConst::LOG_DIRECTORY);
         if(empty($logDir)){
-            $logDir = ROOT."/Log";
+            $logDir = ROOT . "/runtime/logs";
             Di::getInstance()->set(SysConst::LOG_DIRECTORY,$logDir);
         }
         if(!File::createDir($logDir)){
