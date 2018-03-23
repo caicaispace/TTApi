@@ -21,6 +21,9 @@ class Request extends ServerRequest
     function __construct(\swoole_http_request $request)
     {
         $this->swoole_http_request = $request;
+//        var_dump($request->server);
+//        echo '-----------------------------------';
+//        var_dump($_SERVER);
         $this->initHeaders();
         $protocol = str_replace('HTTP/', '', $this->swoole_http_request->server['server_protocol']) ;
         $body = new Stream($this->swoole_http_request->rawContent());

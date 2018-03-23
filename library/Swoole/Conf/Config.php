@@ -50,7 +50,7 @@ class Config
                     'worker_num'       => 8,
 //                    'log_file'         => Di::getInstance()->get(SysConst::LOG_DIRECTORY)."/swoole.log",
 //                    'pid_file'         => ROOT . "/runtime/pid.pid",
-                    'document_root'         => ROOT.'/../public',
+                    'document_root'         => ROOT.'/public',
                     'enable_static_handler' => true,
                 ),
             ),
