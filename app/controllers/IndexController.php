@@ -2,7 +2,7 @@
 
 namespace TTApiDemo\Controllers;
 
-use Library\Base\AbstractInterface\AController;
+use Library\Base\Phalcon\AbstractInterface\AController;
 
 
 class IndexController extends AController

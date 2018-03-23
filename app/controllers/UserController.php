@@ -2,8 +2,8 @@
 
 namespace TTApiDemo\Controllers;
 
-use Library\Base\AbstractInterface\AController;
-use Library\Base\AbstractInterface\IController;
+use Library\Base\Phalcon\AbstractInterface\AController;
+use Library\Base\Phalcon\AbstractInterface\IController;
 use TTApiDemo\Logics\UserLogic;
 
 class UserController extends AController implements IController

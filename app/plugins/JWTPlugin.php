@@ -36,7 +36,7 @@ class JWTPlugin
          *
          *
          */
-        $key = Random::snowFlake();
+        $key = Random::snowFlake(1,1);
         $key = "example_key";
         $token = array(
             "iss" => "http://ttapi.nginx",

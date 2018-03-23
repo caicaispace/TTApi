@@ -2,8 +2,8 @@
 
 namespace TTApiDemo\Logics;
 
-use Library\Base\AbstractInterface\ALogic;
-use Library\Base\AbstractInterface\ILogic;
+use Library\Base\Phalcon\AbstractInterface\ALogic;
+use Library\Base\Phalcon\AbstractInterface\ILogic;
 use TTApiDemo\Models\Users as UserModel;
 
 class UserLogic extends ALogic implements ILogic

@@ -182,7 +182,7 @@ class Response extends PhalconResponse
             $this->isEndResponse = self::STATUS_REAL_END;
             //结束处理
             $status = $this->getStatusCode();
-            echo 'status' . $status . PHP_EOL;
+//            echo 'status' . $status . PHP_EOL;
             $this->swoole_http_response->status($status);
             $headers = $this->getHeaders()->toArray();
             foreach ($headers as $header => $val){
