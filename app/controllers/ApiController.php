@@ -2,9 +2,9 @@
 
 namespace TTApiDemo\Controllers;
 
-use Library\Base\Phalcon\AbstractInterface\AController;
+use Library\Base\Phalcon\BController;
 
-class ApiController extends AController
+class ApiController extends BController
 {
     public function initialize()
     {

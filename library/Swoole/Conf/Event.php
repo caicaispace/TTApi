@@ -96,7 +96,7 @@ class Event extends AbstractEvent
 //        /*WebSocketCommandParser*/
 //        \Conf\WebSocketCommandParser::getInstance()->onWorkerStart($server, $workerId);
 //        /*hotReload*/
-//        $this->_hotReload($server, $workerId);
+        $this->_hotReload($server, $workerId);
     }
 
     function onWorkerStop(\swoole_server $server, $workerId)
@@ -131,7 +131,7 @@ class Event extends AbstractEvent
     {
         if ($workerId == 0) {
             \Library\Swoole\Timer::loop(3000, function(){
-                \Library\Swoole\Server::getInstance()->getServer()->reload();
+                \Library\Swoole\Init\Server::getInstance()->getServer()->reload();
                 echo 'server reloaded'.PHP_EOL;
             });
         }

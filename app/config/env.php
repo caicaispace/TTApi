@@ -26,7 +26,7 @@ define('APP_PATH', DOCROOT . 'app' . DIRECTORY_SEPARATOR);
 /**
  * @const APP_PRODUCTION Application production stage
  */
-define('APP_PRODUCTION', 'production');
+define('APP_PRODUCTION', 'product');
 
 /**
  * @const APP_STAGING Application staging stage
@@ -36,7 +36,7 @@ define('APP_STAGING', 'staging');
 /**
  * @const APP_DEVELOPMENT Application development stage
  */
-define('APP_DEVELOPMENT', 'development');
+define('APP_DEVELOPMENT', 'develop');
 
 /**
  * @const APP_TEST Application test stage

@@ -2,6 +2,7 @@
 
 use Phalcon\Mvc\Application;
 use Phalcon\Config\Adapter\Ini as ConfigIni;
+use Phalcon\Config\Adapter\Php as ConfigPhp;
 
 try {
     require_once realpath(dirname(dirname(__FILE__))) . '/app/config/env.php';
@@ -10,10 +11,12 @@ try {
      * Read the configuration
      */
     $config = new ConfigIni(APP_PATH . 'config/config.ini');
+    $env = $config->get('appEnv');
     if (is_readable(APP_PATH . 'config/config.ini.dev')) {
         $override = new ConfigIni(APP_PATH . 'config/config.ini.dev');
         $config->merge($override);
     }
+    $config->merge(new ConfigPhp(APP_PATH . 'config/env/'.$env.'.php'));
 
     /**
      * Auto-loader configuration

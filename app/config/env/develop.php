@@ -1,51 +1,96 @@
 <?php
 
 return [
-    '_white_list' => [
-        'options.lifetime',
-        'options.csrf_token_lifetime',
-        'options.cookies.name',
-    ],
-    'default' => 'native',
+    'default' => 'redis',
     'options' => [
         /**
-         * Cookie lifetime, in seconds.
+         * JWT lifetime, in seconds.
          */
         'lifetime' => 86400,
-        /**
-         * CSRF protection token lifetime, in seconds.
-         */
-        'csrf_token_lifetime' => 3600,
-        'cookies' => [
-            'name' => 'phwoolcon',
-            'secure' => false,
-            'http_only' => true,
-        ],
-        /**
-         * Without lazy renew, the session cookie will be set on every request,
-         * which is meaningless to just renew the cookie's expiration time.
-         * Let's renew it later, if the lifetime is long enough.
-         * Interval in seconds, false to disable.
-         */
-        'cookie_lazy_renew_interval' => 600,
     ],
-    'drivers' => [
-        'native' => [
-            'adapter' => 'Phwoolcon\Session\Adapter\Native',
+    /**
+     * databases caches
+     */
+    'databases' => [
+        'mysql' =>[
+            'interval' => 100,  // 断线重连定时器间隔
+            'max_retry' => 3,  // 断线重连重连尝试次数
+            'adapter' => \Phalcon\Db\Adapter\Pdo\Mysql::class,
             'options' => [
-                'save_path' => storagePath('session'),
+                'master' => [
+                    'host' => 'localhost',
+                    'port' => 3306,
+                    'username' => 'root',
+                    'password' => 'goodluck888',
+                    'dbname' => 'tt_demo',
+                    'charset' => 'utf8mb4',
+                ],
+                'slave' => [
+                    'slave1' => [
+                        'host' => '127.0.0.1',
+                        'port' => 3306,
+                        'username' => 'root',
+                        'password' => 'root',
+                        'dbname' => 'test',
+                        'charset' => 'utf8mb4',
+                    ],
+                    'slave2' => [
+                        'host' => '127.0.0.1',
+                        'port' => 3306,
+                        'username' => 'root',
+                        'password' => 'root',
+                        'dbname' => 'test',
+                        'charset' => 'utf8mb4',
+                    ],
+                ]
             ],
-        ],
+        ]
+    ],
+    /**
+     * frontend caches
+     */
+    'frontend_caches' => [
+
+    ],
+    /**
+     * backend caches
+     */
+    'backend_caches' => [
         'redis' => [
-            'adapter' => 'Phwoolcon\Session\Adapter\Redis',
+            'adapter' => \Phalcon\Cache\Backend\Redis::class,
             'options' => [
-                'index' => 6,
+                "host"       => "localhost",
+                "port"       => 6379,
+                "auth"       => "ttapi",
+                "persistent" => false,
+                "index"      => 0,
+                "lifetime"   => 172800,
             ],
         ],
         'memcached' => [
-            'adapter' => 'Phwoolcon\Session\Adapter\Memcached',
+            'adapter' => \Phalcon\Cache\Backend\Libmemcached::class,
             'options' => [
-                'statsKey' => '_PHCM',
+                "servers" => [
+                    [
+                        "host"      => "127.0.0.1",
+                        "port"      => 11211,
+                        "weight"    => 1,
+                        "lifetime"  => 172800,
+                    ],
+                ],
+                "client" => [
+                    \Memcached::OPT_HASH       => \Memcached::HASH_MD5,
+                    \Memcached::OPT_PREFIX_KEY => "prefix.",
+                ],
+            ],
+        ],
+        'memcache' => [
+            'adapter' => \Phalcon\Cache\Backend\Memcache::class,
+            'options' => [
+                "host"       => "localhost",
+                "port"       => 11211,
+                "persistent" => false,
+                "lifetime"   => 172800,
             ],
         ],
     ],
