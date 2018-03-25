@@ -11,57 +11,63 @@ class BMysql
 
     /**
      * workerId
-     *
      * @var int
      */
     protected $workerId;
 
     /**
      * 数据库配置
-     *
      * @var array
      */
-    protected $options;
+    protected $options = array();
 
     /**
      * 定时器
-     *
      * @var int
      */
     protected $timerId;
 
     /**
      * 重连尝试次数
-     *
      * @var int
      */
     protected $maxRetry;
 
+    protected static $instance;
+    static function getInstance($workerId, array $options = null){
+        if(!isset(self::$instance)){
+            self::$instance = new static($workerId, $options);
+        }
+        return self::$instance;
+    }
+
     /**
      * Database constructor.
-     *
      * @param array $options
-     *
      * @param array $workerId
      */
-    public function __construct( $workerId, array $options = null)
+    public function __construct($workerId, array $options = null)
     {
         if (null === $options) {
-            $options = self::getConfig('databases.mysql.options');
+            $options = $this->getConfig('databases.mysql.options');
         }
         $this->options = $options;
         $this->workerId = $workerId;
     }
 
-//    public function ping() {
-//        try {
-//            $this->fetchAll('SELECT 1');
-//        }
-//        catch (\Exception $e) {
-//            $this->connect();
-//        }
-//        return $this;
-//    }
+    /**
+     * @param $serviceName
+     * @return $this
+     */
+    public function ping($serviceName) {
+        try {
+            $this->getDi()->getShared($serviceName)->fetchAll('SELECT 1');
+        }
+        catch (\Exception $e) {
+            $this->getDi()->getShared($serviceName)->connect();
+        }
+        return $this;
+    }
 
     public function getWorkerId()
     {
@@ -84,7 +90,6 @@ class BMysql
     /**
      * @param      $key
      * @param bool $force
-     *
      * @return \Phalcon\Db\Adapter
      */
     public function getConnection($key, $force = false)
@@ -94,13 +99,12 @@ class BMysql
         }
 
         $serviceName = 'databases.mysql.connected.' .$this->workerId. $key;
-        if ($force || !self::getDi()->has($serviceName)) {
-            if (self::getDi()->has($serviceName)) {
+        if ($force || !$this->getDi()->has($serviceName)) {
+            if ($this->getDi()->has($serviceName)) {
                 // Close first
-                self::getDi()->getShared($serviceName)->close();
-                self::getDi()->remove($serviceName);
+                $this->getDi()->getShared($serviceName)->close();
+                $this->getDi()->remove($serviceName);
             }
-
             $config = $this->options[$key];
             $config += [
                 "options"  => [ //长连接配置
@@ -108,7 +112,6 @@ class BMysql
                     \PDO::ATTR_PERSISTENT => true,//长连接
                 ]
             ];
-
             $connection = new Mysql([
                 'host'       => $config['host'],
                 'port'       => $config['port'],
@@ -118,31 +121,26 @@ class BMysql
                 'charset'    => isset($config['charset']) ? $config['charset'] : 'utf8mb4',
                 'persistent' => isset($config['persistent']) ? $config['persistent'] : false,
             ]);
-            $connection->setEventsManager(self::getDi()->getEventsManager());
-            self::getDi()->setShared($serviceName, $connection);
+            $connection->setEventsManager($this->getDi()->getEventsManager());
+            $this->getDi()->setShared($serviceName, $connection);
             /**
              * Database connection is created based in the parameters defined in the configuration file
              */
-            self::getDi()->setShared('db', function () use ($serviceName) {
-                var_dump('$serviceName --> '. $serviceName);
-                return self::getDi()->get($serviceName);
+            $this->getDi()->setShared('db', function () use ($serviceName) {
+                return $this->getShared($serviceName);
             });
         }
-
-        return self::getDi()->getShared($serviceName);
+        return $this->getDi()->getShared($serviceName);
     }
 
     /**
      * 获取连接的信息
-     *
      * @param $key
-     *
      * @return array
      */
     public function getConnectionInfo($key)
     {
         $connection = $this->getConnection($key);
-
         $output = [
             'server'     => 'SERVER_INFO',
             'driver'     => 'DRIVER_NAME',
@@ -150,11 +148,9 @@ class BMysql
             'version'    => 'SERVER_VERSION',
             'connection' => 'CONNECTION_STATUS',
         ];
-
         foreach ($output as $key => $value) {
             $output[$key] = @$connection->getInternalHandler()->getAttribute(constant('PDO::ATTR_' . $value));
         }
-
         return $output;
     }
 
@@ -167,31 +163,31 @@ class BMysql
             swoole_timer_clear($this->timerId);
             $this->timerId = null;
         }
-
         // TODO: 多数据库连接
         $key = 'master';
         $this->getConnection($key, true);
-
 //        // 创建数据库连接
 //        foreach ($this->config as $key => $config) {
 //            $this->getConnection($key, true);
 //        }
-
 //        // 打开数据库调试日志
 //        if ($this->config->get('phalcon.debug', false)) {
-//            self::getDi()->getEventsManager()->attach('db', new DatabaseListener());
+//            \Library\Component\Logger::getInstance()->log('$serviceName --> '. $serviceName);
+//            $this->getDi()->getEventsManager()->attach('db', new DatabaseListener());
 //        }
-
         // 插入一个定时器，定时连一下数据库，防止IDEL超时断线
-        if (self::getConfig('databases.mysql.antiidle', false)) {
-            $interval = self::getConfig('databases.mysql.interval', 100) * 1000; // 定时器间隔
-            $this->maxRetry = self::getConfig('databases.mysql.max_retry', 3); // 重连尝试次数
+        if ($this->getConfig('databases.mysql.antiidle', false)) {
+            $interval = $this->getConfig('databases.mysql.interval', 100) * 1000; // 定时器间隔
+            $this->maxRetry = $this->getConfig('databases.mysql.max_retry', 3); // 重连尝试次数
             $this->timerId = Timer::loop($interval, function () {
                 $this->reconnectHandle();
             });
         }
     }
 
+    /**
+     *
+     */
     public function reconnectHandle()
     {
         $pid = getmypid();

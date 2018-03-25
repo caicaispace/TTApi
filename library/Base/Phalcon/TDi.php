@@ -11,17 +11,11 @@ trait TDi
     protected $di;
 
     /**
-     * @param $name
-     * @param array $params
-     * @return bool|mixed
+     * @return DiInterface
      */
-    public static function di($name, $params = [])
+    public function di()
     {
-        try{
-            $di = DI::getDefault()->get($name, [$params]);
-        } catch (\Phalcon\Exception $e) {
-            return false;
-        }
+         $di = $this->di ? $this->di : DI::getDefault();
         return $di;
     }
 
@@ -34,16 +28,11 @@ trait TDi
     }
 
     /**
-     * @param null $name
-     * @param array $params
-     * @return bool|mixed|DiInterface
+     * @return DiInterface
      */
-    function getDi($name = null, $params = [])
+    public function getDi()
     {
-        if (null === $name) {
-            return DI::getDefault();
-        }
-        return self::di($name, $params);
+        return $this->di();
     }
 
     /**
@@ -51,9 +40,9 @@ trait TDi
      * @param null $defaultValue
      * @return bool|mixed
      */
-    static function getConfig($key = null, $defaultValue = null)
+    public function getConfig($key = null, $defaultValue = null)
     {
-        $config = self::di('config');
+        $config = $this->di()->getShared('config');
         if (null === $key) {
             return $config;
         }

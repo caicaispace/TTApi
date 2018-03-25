@@ -51,24 +51,13 @@ class Event extends AbstractEvent
 
     function onWorkerStart(\swoole_server $server, $workerId)
     {
+
+        $di = Di::getInstance()->getPhalconAppDi();
+        $config = $di->getShared('config');
         /**
          * Database connection is created based in the parameters defined in the configuration file
          */
-        $di = Di::getInstance()->getPhalconAppDi();
-        $config = $di->getShared('config');
-//        $di->setShared('db', function () use ($config) {
-//            $config = $config->get('database')->toArray();
-//            $dbClass = 'Phalcon\Db\Adapter\Pdo\\' . $config['adapter'];
-//            unset($config['adapter']);
-//            $config += [
-//                "options"  => [ //长连接配置
-//                    \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8mb4'",
-//                    \PDO::ATTR_PERSISTENT => true,//长连接
-//                ]
-//            ];
-//            return new $dbClass($config);
-//        });
-        $mysql = new \Library\Base\Phalcon\BMysql($workerId);
+        $mysql = \Library\Base\Phalcon\BMysql::getInstance($workerId);
         $mysql->initPool();
         $di->setShared('cacheMemcache', function () {
             $frontCache = new \Phalcon\Cache\Frontend\Data(
