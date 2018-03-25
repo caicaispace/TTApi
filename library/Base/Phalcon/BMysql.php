@@ -97,7 +97,7 @@ class BMysql
         if ($force || !self::getDi()->has($serviceName)) {
             if (self::getDi()->has($serviceName)) {
                 // Close first
-                self::getDi()->get($serviceName)->close();
+                self::getDi()->getShared($serviceName)->close();
                 self::getDi()->remove($serviceName);
             }
 
@@ -108,6 +108,7 @@ class BMysql
                     \PDO::ATTR_PERSISTENT => true,//长连接
                 ]
             ];
+
             $connection = new Mysql([
                 'host'       => $config['host'],
                 'port'       => $config['port'],
@@ -118,16 +119,17 @@ class BMysql
                 'persistent' => isset($config['persistent']) ? $config['persistent'] : false,
             ]);
             $connection->setEventsManager(self::getDi()->getEventsManager());
-            self::getDi()->set($serviceName, $connection);
+            self::getDi()->setShared($serviceName, $connection);
             /**
              * Database connection is created based in the parameters defined in the configuration file
              */
             self::getDi()->setShared('db', function () use ($serviceName) {
+                var_dump('$serviceName --> '. $serviceName);
                 return self::getDi()->get($serviceName);
             });
         }
 
-        return self::getDi()->get($serviceName);
+        return self::getDi()->getShared($serviceName);
     }
 
     /**

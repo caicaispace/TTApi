@@ -72,15 +72,15 @@ $di->setShared('view', function() {
     return $view;
 });
 
-///**
-// * Database connection is created based in the parameters defined in the configuration file
-// */
-//$di->setShared('db', function () use ($config) {
-//    $config = $config->get('databases')->mysql;
-//    $dbClass = $config->adapter;
-//    $options = $config->options->master->toArray();
-//    return new $dbClass($options);
-//});
+/**
+ * Database connection is created based in the parameters defined in the configuration file
+ */
+$di->setShared('db', function () use ($config) {
+    $config = $config->get('databases')->mysql;
+    $dbClass = $config->adapter;
+    $options = $config->options->master->toArray();
+    return new $dbClass($options);
+});
 
 /**
  * If the configuration specify the use of metadata adapter use it or use memory otherwise
