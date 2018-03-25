@@ -15,8 +15,7 @@ trait TDi
      */
     public function di()
     {
-         $di = $this->di ? $this->di : DI::getDefault();
-        return $di;
+        return $this->di ? $this->di : DI::getDefault();
     }
 
     /**

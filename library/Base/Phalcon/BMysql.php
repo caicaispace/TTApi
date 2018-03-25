@@ -160,7 +160,7 @@ class BMysql
     public function initPool()
     {
         if ($this->timerId) {
-            swoole_timer_clear($this->timerId);
+            Timer::clear($this->timerId);
             $this->timerId = null;
         }
         // TODO: 多数据库连接
