@@ -19,6 +19,8 @@ use Library\Utility\File;
 
 use Phalcon\Mvc\Application as PhalconApplication;
 use Phalcon\Config\Adapter\Ini as PhalconConfigIni;
+use Phalcon\Config\Adapter\Php as ConfigPhp;
+
 
 class Core
 {
@@ -119,10 +121,12 @@ class Core
              * Read the configuration
              */
             $config = new PhalconConfigIni(APP_PATH . 'config/config.ini');
+            $env = $config->get('appEnv');
             if (is_readable(APP_PATH . 'config/config.ini.dev')) {
                 $override = new PhalconConfigIni(APP_PATH . 'config/config.ini.dev');
                 $config->merge($override);
             }
+            $config->merge(new ConfigPhp(APP_PATH . 'config/env/'.$env.'.php'));
             /**
              * Auto-loader configuration
              */
@@ -176,6 +180,9 @@ class Core
         }, true);
         Di::getInstance()->set(SysConst::VERSION, function () {
             return '0.0.1';
+        }, true);
+        Di::getInstance()->set('config', function () {
+            return Di::getInstance()->getPhalconAppDi()->getShare('config');
         }, true);
     }
 }

@@ -37,7 +37,6 @@ class BMysql
      */
     protected $maxRetry;
 
-
     /**
      * Database constructor.
      *
@@ -103,6 +102,12 @@ class BMysql
             }
 
             $config = $this->options[$key];
+            $config += [
+                "options"  => [ //长连接配置
+                    \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8mb4'",
+                    \PDO::ATTR_PERSISTENT => true,//长连接
+                ]
+            ];
             $connection = new Mysql([
                 'host'       => $config['host'],
                 'port'       => $config['port'],
@@ -114,6 +119,12 @@ class BMysql
             ]);
             $connection->setEventsManager(self::getDi()->getEventsManager());
             self::getDi()->set($serviceName, $connection);
+            /**
+             * Database connection is created based in the parameters defined in the configuration file
+             */
+            self::getDi()->setShared('db', function () use ($serviceName) {
+                return self::getDi()->get($serviceName);
+            });
         }
 
         return self::getDi()->get($serviceName);
@@ -170,7 +181,7 @@ class BMysql
 //        }
 
         // 插入一个定时器，定时连一下数据库，防止IDEL超时断线
-        if (self::getConfig('phalcon.antiidle', false)) {
+        if (self::getConfig('databases.mysql.antiidle', false)) {
             $interval = self::getConfig('databases.mysql.interval', 100) * 1000; // 定时器间隔
             $this->maxRetry = self::getConfig('databases.mysql.max_retry', 3); // 重连尝试次数
             $this->timerId = Timer::loop($interval, function () {

@@ -56,18 +56,20 @@ class Event extends AbstractEvent
          */
         $di = Di::getInstance()->getPhalconAppDi();
         $config = $di->getShared('config');
-        $di->setShared('db', function () use ($config) {
-            $config = $config->get('database')->toArray();
-            $dbClass = 'Phalcon\Db\Adapter\Pdo\\' . $config['adapter'];
-            unset($config['adapter']);
-            $config += [
-                "options"  => [ //长连接配置
-                    \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8mb4'",
-                    \PDO::ATTR_PERSISTENT => true,//长连接
-                ]
-            ];
-            return new $dbClass($config);
-        });
+//        $di->setShared('db', function () use ($config) {
+//            $config = $config->get('database')->toArray();
+//            $dbClass = 'Phalcon\Db\Adapter\Pdo\\' . $config['adapter'];
+//            unset($config['adapter']);
+//            $config += [
+//                "options"  => [ //长连接配置
+//                    \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8mb4'",
+//                    \PDO::ATTR_PERSISTENT => true,//长连接
+//                ]
+//            ];
+//            return new $dbClass($config);
+//        });
+        $mysql = new \Library\Base\Phalcon\BMysql($workerId);
+        $mysql->initPool();
         $di->setShared('cacheMemcache', function () {
             $frontCache = new \Phalcon\Cache\Frontend\Data(
                 [
@@ -96,7 +98,7 @@ class Event extends AbstractEvent
 //        /*WebSocketCommandParser*/
 //        \Conf\WebSocketCommandParser::getInstance()->onWorkerStart($server, $workerId);
 //        /*hotReload*/
-        $this->_hotReload($server, $workerId);
+//        $this->_hotReload($server, $workerId);
     }
 
     function onWorkerStop(\swoole_server $server, $workerId)
