@@ -13,7 +13,7 @@ return [
      */
     'databases' => [
         'mysql' =>[
-            'antiidle'  => true, // 开启后，会通过定时器定时访问一下数据库，方式发呆断线
+            'antiidle'  => true, // 开启后，会通过定时器定时访问一下数据库，防止发呆断线
             'interval'  => 3600,  // 断线重连定时器间隔
             'max_retry' => 3,    // 断线重连重连尝试次数
             'adapter' => \Phalcon\Db\Adapter\Pdo\Mysql::class,
@@ -26,24 +26,25 @@ return [
                     'dbname' => 'tt_demo',
                     'charset' => 'utf8mb4',
                 ],
-                'slave' => [
-                    'slave1' => [
-                        'host' => '127.0.0.1',
-                        'port' => 3306,
-                        'username' => 'root',
-                        'password' => 'root',
-                        'dbname' => 'test',
-                        'charset' => 'utf8mb4',
-                    ],
-                    'slave2' => [
-                        'host' => '127.0.0.1',
-                        'port' => 3306,
-                        'username' => 'root',
-                        'password' => 'root',
-                        'dbname' => 'test',
-                        'charset' => 'utf8mb4',
-                    ],
-                ]
+                // 暂不支持数据库主从/读写分离
+//                'slave' => [
+//                    'slave1' => [
+//                        'host' => '127.0.0.1',
+//                        'port' => 3306,
+//                        'username' => 'root',
+//                        'password' => 'root',
+//                        'dbname' => 'test',
+//                        'charset' => 'utf8mb4',
+//                    ],
+//                    'slave2' => [
+//                        'host' => '127.0.0.1',
+//                        'port' => 3306,
+//                        'username' => 'root',
+//                        'password' => 'root',
+//                        'dbname' => 'test',
+//                        'charset' => 'utf8mb4',
+//                    ],
+//                ]
             ],
         ]
     ],

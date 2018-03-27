@@ -72,7 +72,7 @@ git@github.com:ycman/TTApi.git
 ```
 server {
     root /data/wwwroot/TTApi/public/;
-    server_name ttapi.swoole;
+    server_name ttapi.com;
 
     location / {
         proxy_http_version 1.1;
