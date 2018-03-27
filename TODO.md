@@ -1,4 +1,4 @@
 - [x] swoole ide helper
-- [ ] jwt
+- [x] jwt
 - [ ] restFul
 - [ ] elk

@@ -35,12 +35,10 @@ class Config
         return array(
             "SERVER"=>array(
                 "LISTEN"         => "0.0.0.0",
-                "SERVER_NAME"    => "easyswoole",
+                "SERVER_NAME"    => "TT api",
                 "PORT"           => 9501,
                 "RUN_MODE"       => SWOOLE_PROCESS,//不建议更改此项
-                "SERVER_TYPE"    => \Library\Swoole\Init\Config::SERVER_TYPE_WEB,//
-//                "SERVER_TYPE"    => \Library\Swoole\Config::SERVER_TYPE_WEB_SOCKET,// 直播打开
-//                'SOCKET_TYPE'    => SWOOLE_TCP,//当SERVER_TYPE为SERVER_TYPE_SERVER模式时有效
+                "SERVER_TYPE"    => \Library\Swoole\Init\Config::SERVER_TYPE_WEB,
                 "CONFIG"=>array(
                     'user'             => USER, //当前用户
                     'group'            => USER_GROUP, //当前用户组
@@ -48,8 +46,6 @@ class Config
                     'task_max_request' => 10,
                     'max_request'      => 5000,//强烈建议设置此配置项
                     'worker_num'       => 8,
-//                    'log_file'         => Di::getInstance()->get(SysConst::LOG_DIRECTORY)."/swoole.log",
-//                    'pid_file'         => ROOT . "/runtime/pid.pid",
                     'document_root'         => ROOT.'/public',
                     'enable_static_handler' => true,
                 ),

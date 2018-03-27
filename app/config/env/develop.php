@@ -22,7 +22,7 @@ return [
                     'host' => 'localhost',
                     'port' => 3306,
                     'username' => 'root',
-                    'password' => 'goodluck888',
+                    'password' => 'root',
                     'dbname' => 'tt_demo',
                     'charset' => 'utf8mb4',
                 ],

@@ -209,7 +209,7 @@ function help($options){
     }
     switch ($opName){
         case 'start':{
-            echo "------------easySwoole 启动命令------------".PHP_EOL;
+            echo "------------TT api 启动命令------------".PHP_EOL;
             echo "执行php server.php start 即可启动服务。启动可选参数为:".PHP_EOL;
             echo "--d                       是否以系统守护模式运行".PHP_EOL;
             echo "--p-portNumber            指定服务监听端口".PHP_EOL;
@@ -223,25 +223,25 @@ function help($options){
             break;
         }
         case 'stop':{
-            echo "------------easySwoole 停止命令------------".PHP_EOL;
+            echo "------------  停止命令------------".PHP_EOL;
             echo "执行php server.php stop 即可启动服务。启动可选参数为:".PHP_EOL;
             echo "--pid-fileName        指定服务PID存储文件".PHP_EOL;
             echo "--f                   强制停止服务".PHP_EOL;
             break;
         }
         case 'reload':{
-            echo "------------easySwoole 重启命令------------".PHP_EOL;
+            echo "------------TT api  重启命令------------".PHP_EOL;
             echo "执行php server.php reload 即可启动服务。启动可选参数为:".PHP_EOL;
             echo "--pid-fileName        指定服务PID存储文件".PHP_EOL;
             echo "--pid-all             是否重启所有进程，默认true".PHP_EOL;
             break;
         }
         default:{
-            echo "------------欢迎使用easySwoole------------".PHP_EOL;
+            echo "------------欢迎使用 TT api ------------".PHP_EOL;
             echo "有关某个命令的详细信息，请使用 help 命令, 如help --start 可选参数为:".PHP_EOL;
-            echo "--start            启动easySwoole".PHP_EOL;
-            echo "--stop             停止easySwoole".PHP_EOL;
-            echo "--reload           重启easySwoole".PHP_EOL;
+            echo "--start            启动TT api ".PHP_EOL;
+            echo "--stop             停止TT api ".PHP_EOL;
+            echo "--reload           重启TT api ".PHP_EOL;
         }
     }
 }
