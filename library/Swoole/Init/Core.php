@@ -127,6 +127,7 @@ class Core
                 $config->merge($override);
             }
             $config->merge(new ConfigPhp(APP_PATH . 'config/env/'.$env.'.php'));
+            $config->merge(new ConfigPhp(APP_PATH . 'config/swoole.php'));
             /**
              * Auto-loader configuration
              */

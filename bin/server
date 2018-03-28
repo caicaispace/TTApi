@@ -1,2 +1,2 @@
 <?php
-require_once dirname(__FILE__) . '/../library/Swoole/Bootstrap';
+require_once dirname(__FILE__) . '/../library/Swoole/server';

@@ -32,44 +32,10 @@ class Config
     }
 
     private function sysConf(){
-        return array(
-            "SERVER"=>array(
-                "LISTEN"         => "0.0.0.0",
-                "SERVER_NAME"    => "TT api",
-                "PORT"           => 9501,
-                "RUN_MODE"       => SWOOLE_PROCESS,//不建议更改此项
-                "SERVER_TYPE"    => \Library\Swoole\Init\Config::SERVER_TYPE_WEB,
-                "CONFIG"=>array(
-                    'user'             => USER, //当前用户
-                    'group'            => USER_GROUP, //当前用户组
-                    'task_worker_num'  => 8, //异步任务进程
-                    'task_max_request' => 10,
-                    'max_request'      => 5000,//强烈建议设置此配置项
-                    'worker_num'       => 8,
-                    'document_root'         => ROOT.'/public',
-                    'enable_static_handler' => true,
-                ),
-            ),
-            "MYSQL" => array(
-                'host'     => 'localhost',
-                'username' => 'root',
-                'password' => 'goodluck888',
-                'db'       => 'es',
-                'port'     => 3306,
-                'charset'  => 'utf8'
-            ),
-            "REDIS"=>array(
-                "host"=>'localhost',
-                "port"=>6379,
-                "auth"=>''
-            ),
-            "DEBUG"=>array(
-                "LOG"=>1,
-                "DISPLAY_ERROR"=>1,
-                "ENABLE"=>true,
-            ),
-            "CONTROLLER_POOL"=>true//web或web socket模式有效
-        );
+        $config = Di::getInstance()->getPhalconAppDi()->get('config')->swoole->toArray();
+        $config['CONFIG']['user'] = USER; //当前用户
+        $config['CONFIG']['group'] = USER_GROUP; //USER_GROUP
+        return $config;
     }
 
     private function userConf(){

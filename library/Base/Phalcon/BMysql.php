@@ -69,11 +69,17 @@ class BMysql
         return $this;
     }
 
+    /**
+     * @return array|int
+     */
     public function getWorkerId()
     {
         return $this->workerId;
     }
 
+    /**
+     * @return array|bool|mixed
+     */
     public function getOptions()
     {
         return $this->options;
