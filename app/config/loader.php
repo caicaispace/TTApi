@@ -15,7 +15,7 @@ $loader->registerNamespaces(
         'App\Models'      => DOCROOT . 'app/models/',
         'App\Plugins'     => DOCROOT . 'app/plugins/',
         'App\Logics'      => DOCROOT . 'app/logics/',
-        'App\Listeners'   => DOCROOT . 'app/Listeners/',
+        'App\Listeners'   => DOCROOT . 'app/listeners/',
         'Library'         => DOCROOT . 'library/',
     ]
 );

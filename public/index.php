@@ -23,7 +23,6 @@ try {
     }
     $config->merge(new ConfigPhp(APP_PATH . 'config/env/'.$env.'.php'));
 
-
     /**
      * Load application services
      */

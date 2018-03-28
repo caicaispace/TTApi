@@ -34,15 +34,15 @@ $di->setShared('eventsManager', $eventsManager);
  */
 $di->setShared('dispatcher', function () use ($di, $eventsManager) {
 
-    $eventsManager->attach('dispatch:beforeDispatch', new JWTPlugin);
+//    $eventsManager->attach('dispatch:beforeDispatch', new JWTPlugin);
 
-    $securityPlugin = new SecurityPlugin;
-    $securityPlugin->setResources(new Resource);
-
-    /**
-     * Check if the user is allowed to access certain action using the SecurityPlugin
-     */
-    $eventsManager->attach('dispatch:beforeDispatch', $securityPlugin);
+//    $securityPlugin = new SecurityPlugin;
+//    $securityPlugin->setResources(new Resource);
+//
+//    /**
+//     * Check if the user is allowed to access certain action using the SecurityPlugin
+//     */
+//    $eventsManager->attach('dispatch:beforeDispatch', $securityPlugin);
 
     /**
      * Handle exceptions and not-found exceptions using NotFoundPlugin

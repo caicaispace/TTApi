@@ -19,11 +19,6 @@ if (!file_exists(DOCROOT . 'vendor/autoload.php')) {
 include DOCROOT . 'vendor/autoload.php';
 
 /**
- * @const ROOT
- */
-define('ROOT', dirname(__FILE__));
-
-/**
  * @const DOCROOT Main application path
  */
 define('APP_PATH', DOCROOT . 'app' . DIRECTORY_SEPARATOR);
