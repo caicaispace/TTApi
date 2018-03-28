@@ -42,8 +42,6 @@ class Message extends SplBean
         $this->message = $message;
     }
 
-
-
     protected function initialize()
     {
         // TODO: Implement initialize() method.
