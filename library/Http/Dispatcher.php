@@ -4,8 +4,6 @@ namespace Library\Http;
 
 use Library\Swoole\Conf\Config;
 use Library\Swoole\Conf\Event;
-use Library\Base\Swoole\AbstractInterface\AbstractController;
-use Library\Base\Swoole\AbstractInterface\AbstractRouter;
 use Library\Component\Di;
 use Library\Component\SysConst;
 use Library\Swoole\Init\Server;
@@ -40,13 +38,7 @@ class Dispatcher
         $request2 = $request->getSwooleRequest();
         $phalconApplication = Server::getInstance()->getPhalconApplication();
 
-//        $cache = $phalconApplication->getDI()->get('cacheMemcache');
-//        $cache->save("my-data", [1, 2, 3, 4, 5]);
-//        $data = $cache->get("my-data");
-//        var_dump($data);
-
         //注册捕获错误函数
-//        register_shutdown_function(array($this, 'handleFatal'));
         if ($request2->server['request_uri'] == '/favicon.ico' || $request2->server['path_info'] == '/favicon.ico') {
             return $response->end(true);
         }

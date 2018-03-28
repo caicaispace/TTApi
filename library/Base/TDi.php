@@ -1,6 +1,6 @@
 <?php
 
-namespace Library\Base\Phalcon;
+namespace Library\Base;
 
 use Phalcon\DI;
 use Phalcon\DiInterface;

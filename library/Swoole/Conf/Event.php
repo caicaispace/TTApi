@@ -57,7 +57,7 @@ class Event extends AbstractEvent
         /**
          * Database connection is created based in the parameters defined in the configuration file
          */
-        $mysql = \Library\Base\Phalcon\BMysql::getInstance($workerId);
+        $mysql = \Library\Base\Swoole\BMysql::getInstance($workerId);
         $mysql->initPool();
         $di->setShared('cacheMemcache', function () {
             $frontCache = new \Phalcon\Cache\Frontend\Data(

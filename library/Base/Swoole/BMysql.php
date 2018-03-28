@@ -1,8 +1,9 @@
 <?php
 
-namespace  Library\Base\Phalcon;
+namespace  Library\Base\Swoole;
 
 use Phalcon\Db\Adapter\Pdo\Mysql;
+use Library\Base\TDi;
 use Library\Swoole\Timer;
 
 class BMysql

@@ -4,6 +4,7 @@ namespace Library\Base\Phalcon;
 
 use Phalcon\Mvc\Controller;
 use Library\Http\Response;
+use Library\Base\TDi;
 
 class BController extends Controller
 {
