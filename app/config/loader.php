@@ -11,11 +11,12 @@ $loader = new Loader;
 
 $loader->registerNamespaces(
     [
-        'TTApiDemo\Controllers' => DOCROOT . $config->get('application')->controllersDir,
-        'TTApiDemo\Models'      => DOCROOT . $config->get('application')->modelsDir,
-        'TTApiDemo\Plugins'     => DOCROOT . $config->get('application')->pluginsDir,
-        'TTApiDemo\Logics'      => DOCROOT . $config->get('application')->logicsDir,
-        'Library'               => DOCROOT . $config->get('application')->libraryDir,
+        'App\Controllers' => DOCROOT . 'app/controllers/',
+        'App\Models'      => DOCROOT . 'app/models/',
+        'App\Plugins'     => DOCROOT . 'app/plugins/',
+        'App\Logics'      => DOCROOT . 'app/logics/',
+        'App\Listeners'   => DOCROOT . 'app/Listeners/',
+        'Library'         => DOCROOT . 'library/',
     ]
 );
 

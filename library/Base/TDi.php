@@ -45,7 +45,6 @@ trait TDi
         if (null === $key) {
             return $config;
         }
-        $config = $config->toArray();
-        return Functions::fnGet($config, $key, $defaultValue);
+        return $config->getByString($key,$defaultValue);
     }
 }

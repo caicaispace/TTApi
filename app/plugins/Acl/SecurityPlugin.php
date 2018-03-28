@@ -1,6 +1,6 @@
 <?php
 
-namespace TTApiDemo\Plugins\Acl;
+namespace App\Plugins\Acl;
 
 use Phalcon\Acl;
 use Phalcon\Acl\Role;
@@ -9,7 +9,7 @@ use Phalcon\Events\Event;
 use Phalcon\Mvc\User\Plugin;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Acl\Adapter\Memory as AclList;
-use TTApiDemo\Plugins\Acl\Resource\ResourceInterface;
+use App\Plugins\Acl\Resource\ResourceInterface;
 
 /**
  * SecurityPlugin

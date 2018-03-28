@@ -1,6 +1,6 @@
 <?php
 
-namespace TTApiDemo\Plugins;
+namespace App\Plugins;
 
 use Phalcon\Dispatcher;
 use Phalcon\Events\Event;

@@ -19,6 +19,11 @@ if (!file_exists(DOCROOT . 'vendor/autoload.php')) {
 include DOCROOT . 'vendor/autoload.php';
 
 /**
+ * @const ROOT
+ */
+define('ROOT', dirname(__FILE__));
+
+/**
  * @const DOCROOT Main application path
  */
 define('APP_PATH', DOCROOT . 'app' . DIRECTORY_SEPARATOR);
@@ -41,7 +46,7 @@ define('APP_DEVELOPMENT', 'develop');
 /**
  * @const APP_TEST Application test stage
  */
-define('APP_TEST', 'testing');
+define('APP_TEST', 'test');
 
 /**
  * @const APPLICATION_ENV Current application environment

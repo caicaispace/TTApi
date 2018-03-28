@@ -36,7 +36,7 @@ class Dispatcher
         $request = Request::getInstance();
         $response = HttpResponse::getInstance();
         $request2 = $request->getSwooleRequest();
-        $phalconApplication = Server::getInstance()->getPhalconApplication();
+        $phalconApp = Server::getInstance()->getPhalconApp();
 
         //注册捕获错误函数
         if ($request2->server['request_uri'] == '/favicon.ico' || $request2->server['path_info'] == '/favicon.ico') {
@@ -61,10 +61,10 @@ class Dispatcher
             }
         }
         if (APPLICATION_ENV == APP_TEST) {
-            return $phalconApplication;
+            return $phalconApp;
         } else {
-            $phalconApplicationResponse = $phalconApplication->handle();
-            $content = \json_decode($phalconApplicationResponse->getContent(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+            $phalconAppResponse = $phalconApp->handle();
+            $content = \json_decode($phalconAppResponse->getContent(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
             $response->setJsonContent($content);
         }
     }

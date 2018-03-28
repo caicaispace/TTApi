@@ -1,10 +1,10 @@
 <?php
 
-namespace TTApiDemo\Controllers;
+namespace App\Controllers;
 
 use Library\Base\Phalcon\BController;
 use Library\Base\Phalcon\AbstractInterface\IController;
-use TTApiDemo\Logics\UserLogic;
+use App\Logics\UserLogic;
 
 class UserController extends BController implements IController
 {

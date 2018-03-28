@@ -1,6 +1,6 @@
 <?php
 
-namespace TTApiDemo\Models;
+namespace App\Models;
 
 use Phalcon\Mvc\Model;
 

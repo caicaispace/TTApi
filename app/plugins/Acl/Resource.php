@@ -1,8 +1,8 @@
 <?php
 
-namespace TTApiDemo\Plugins\Acl;
+namespace App\Plugins\Acl;
 
-use TTApiDemo\Plugins\Acl\Resource\ResourceInterface;
+use App\Plugins\Acl\Resource\ResourceInterface;
 
 class Resource implements ResourceInterface
 {

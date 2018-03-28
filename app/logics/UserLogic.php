@@ -1,10 +1,10 @@
 <?php
 
-namespace TTApiDemo\Logics;
+namespace App\Logics;
 
 use Library\Base\Phalcon\AbstractInterface\ALogic;
 use Library\Base\Phalcon\AbstractInterface\ILogic;
-use TTApiDemo\Models\Users as UserModel;
+use App\Models\Users as UserModel;
 
 class UserLogic extends ALogic implements ILogic
 {

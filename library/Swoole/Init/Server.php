@@ -21,7 +21,7 @@ class Server
     protected static $instance;
     protected $swooleServer;
     protected $isStart = 0;
-    protected $phalconApplication;
+    protected $phalconApp;
     /**
      * 仅仅用于获取一个服务实例
      * @return Server
@@ -83,20 +83,20 @@ class Server
 
     /**
      * 设置 phalcon mvc application
-     * @param $phalconApplication
+     * @param $phalconApp
      */
-    function setPhalconApplication($phalconApplication){
-        if ($this->phalconApplication){
+    function setPhalconApp($phalconApp){
+        if ($this->phalconApp){
             return;
         }
-        $this->phalconApplication = $phalconApplication;
+        $this->phalconApp = $phalconApp;
     }
     /**
      * 获取 phalcon mvc application
      * @return \Phalcon\Mvc\Application
      */
-    function getPhalconApplication(){
-        return $this->phalconApplication;
+    function getPhalconApp(){
+        return $this->phalconApp;
     }
     /**
      * 监听http请求

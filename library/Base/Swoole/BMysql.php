@@ -5,6 +5,7 @@ namespace  Library\Base\Swoole;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Library\Base\TDi;
 use Library\Swoole\Timer;
+use Library\Component\Logger;
 
 class BMysql
 {
@@ -177,11 +178,11 @@ class BMysql
 //        foreach ($this->config as $key => $config) {
 //            $this->getConnection($key, true);
 //        }
-//        // 打开数据库调试日志
-//        if ($this->config->get('phalcon.debug', false)) {
-//            \Library\Component\Logger::getInstance()->log('$serviceName --> '. $serviceName);
-//            $this->getDi()->getEventsManager()->attach('db', new DatabaseListener());
-//        }
+        // 打开数据库调试日志
+        if ($this->getConfig('debug', false)) {
+            $listener = $this->getConfig('databases.mysql.listener');
+            $this->getDi()->getEventsManager()->attach('db', new $listener);
+        }
         // 插入一个定时器，定时连一下数据库，防止IDEL超时断线
         if ($this->getConfig('databases.mysql.antiidle', false)) {
             $interval = $this->getConfig('databases.mysql.interval', 100) * 1000; // 定时器间隔
@@ -204,16 +205,16 @@ class BMysql
             while ($tryTimes < $this->maxRetry) {
                 try {
                     $info = $this->getConnectionInfo($key);
-//                    logger()->log(Logger::DEBUG, "[$pid] [Database $key] [$time] AntiIdle: " . $info['server']);
+                    Logger::getInstance()->log("[$pid] [Database $key] [$time] AntiIdle: ".$info['server']);
                     break;
                 } catch (\Exception $e) {
                     if (preg_match("/(errno=32 Broken pipe)|(MySQL server has gone away)/", $e->getMessage())) {
-//                        logger()->log(Logger::ERROR, "[$pid] [Database $key] Connection lost({$e->getMessage()}), try to reconnect, tried times $tryTimes");
+                        Logger::getInstance()->log("[$pid] [Database $key] Connection lost({$e->getMessage()}), try to reconnect, tried times $tryTimes");
                         $this->reconnect($key);
                         $tryTimes ++;
                         continue;
                     }
-//                    logger()->log(Logger::ERROR, "[$pid] [Database $key] Quit on exception: " . $e->getMessage());
+                    Logger::getInstance()->log("[$pid] [Database $key] Quit on exception: ".$e->getMessage());
                     exit(255);
                 }
             }

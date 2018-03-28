@@ -1,7 +1,9 @@
 <?php
 /* develop env */
 return [
+    'debug' => true,
     'default' => 'redis',
+    'logger_path' => DOCROOT.'/runtime/logs/',
     'options' => [
         /**
          * JWT lifetime, in seconds.
@@ -17,6 +19,8 @@ return [
             'interval'  => 3600,  // 断线重连定时器间隔
             'max_retry' => 3,    // 断线重连重连尝试次数
             'adapter' => \Phalcon\Db\Adapter\Pdo\Mysql::class,
+            'listener' => \App\Listeners\DatabaseListener::class,
+            'logger_name' => 'develop_sql_'.date('ym').'.log',
             'options' => [
                 'master' => [
                     'host' => 'localhost',

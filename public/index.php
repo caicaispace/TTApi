@@ -1,11 +1,16 @@
 <?php
 
 use Phalcon\Mvc\Application;
-use Phalcon\Config\Adapter\Ini as ConfigIni;
-use Phalcon\Config\Adapter\Php as ConfigPhp;
+use Library\Component\Config\Ini as ConfigIni;
+use Library\Component\Config\Php as ConfigPhp;
 
 try {
     require_once realpath(dirname(dirname(__FILE__))) . '/app/config/env.php';
+
+    /**
+     * Auto-loader configuration
+     */
+    require APP_PATH . 'config/loader.php';
 
     /**
      * Read the configuration
@@ -18,10 +23,6 @@ try {
     }
     $config->merge(new ConfigPhp(APP_PATH . 'config/env/'.$env.'.php'));
 
-    /**
-     * Auto-loader configuration
-     */
-    require APP_PATH . 'config/loader.php';
 
     /**
      * Load application services

@@ -12,21 +12,20 @@ use Library\Component\Error\Trigger;
 //use Library\Component\Spl\SplError;
 use Library\Component\SysConst;
 use Library\Http\Request;
-//use Library\Http\Response;
 use Library\Http\Response;
 //use Library\Swoole\Server;
 use Library\Utility\File;
 
-use Phalcon\Mvc\Application as PhalconApplication;
-use Phalcon\Config\Adapter\Ini as PhalconConfigIni;
-use Phalcon\Config\Adapter\Php as ConfigPhp;
+use Phalcon\Mvc\Application as PhalconApp;
+use Library\Component\Config\Ini as ConfigIni;
+use Library\Component\Config\Php as ConfigPhp;
 
 
 class Core
 {
     protected static $instance;
     private $preCall;
-    private $phalconApplication;
+    private $phalconApp;
     function __construct($preCall)
     {
         $this->preCall = $preCall;
@@ -40,7 +39,7 @@ class Core
     }
 
     function run(){
-        Server::getInstance()->setPhalconApplication($this->phalconApplication);
+        Server::getInstance()->setPhalconApp($this->phalconApp);
         Server::getInstance()->startServer();
     }
 
@@ -53,7 +52,7 @@ class Core
         }
         $this->defineSysConst();
         $this->registerAutoLoader();
-        $this->registerPhalconApplication();
+        $this->registerPhalconApp();
         $this->registerPhalconDi();
         $this->preHandle();
         Event::getInstance()->frameInitialize();
@@ -64,7 +63,6 @@ class Core
     }
 
     private function defineSysConst(){
-        defined('ROOT') or define('ROOT',dirname(dirname(dirname(dirname(__FILE__)))));
         defined('USER') or define('USER',trim(shell_exec('whoami')));
         defined('USER_GROUP') or define('USER_GROUP',trim(shell_exec('groups '.USER)));
     }
@@ -72,7 +70,7 @@ class Core
         //创建日志目录
         $logDir = Di::getInstance()->get(SysConst::LOG_DIRECTORY);
         if(empty($logDir)){
-            $logDir = ROOT . "/runtime/logs";
+            $logDir = DOCROOT . "runtime/logs";
             Di::getInstance()->setShared(SysConst::LOG_DIRECTORY, function () use ($logDir){
                 return $logDir;
             });
@@ -89,10 +87,8 @@ class Core
         $loader = AutoLoader::getInstance();
         $loader->registerNamespaces(
             [
-                'Core' => ROOT . "/src/Core/",
-                'Conf' => ROOT . "/src/Conf/",
-                'Base' => ROOT . "/src/Base/",
-                'Library' => ROOT . "/library/",
+                'App' => DOCROOT . "app/",
+                'Library' => DOCROOT . "library/",
             ]
         );
         $loader->register();
@@ -101,29 +97,29 @@ class Core
     /**
      * 注册 phalcon application
      */
-    function registerPhalconApplication(){
+    function registerPhalconApp(){
         try {
-            /**
-             * Read the configuration
-             */
-            $config = new PhalconConfigIni(APP_PATH . 'config/config.ini');
-            $env = $config->get('appEnv');
-            if (is_readable(APP_PATH . 'config/config.ini.dev')) {
-                $override = new PhalconConfigIni(APP_PATH . 'config/config.ini.dev');
-                $config->merge($override);
-            }
-            $config->merge(new ConfigPhp(APP_PATH . 'config/env/'.$env.'.php'));
-            $config->merge(new ConfigPhp(APP_PATH . 'config/swoole.php'));
             /**
              * Auto-loader configuration
              */
             require APP_PATH . 'config/loader.php';
             /**
+             * Read the configuration
+             */
+            $config = new ConfigIni(APP_PATH . 'config/config.ini');
+            $env = $config->get('appEnv');
+            if (is_readable(APP_PATH . 'config/config.ini.dev')) {
+                $override = new ConfigIni(APP_PATH . 'config/config.ini.dev');
+                $config->merge($override);
+            }
+            $config->merge(new ConfigPhp(APP_PATH . 'config/env/'.$env.'.php'));
+            $config->merge(new ConfigPhp(APP_PATH . 'config/swoole.php'));
+            /**
              * Load application services
              */
             require APP_PATH . 'config/services.php';
-            $this->phalconApplication = new PhalconApplication($di);
-            $this->phalconApplication->setEventsManager($eventsManager);
+            $this->phalconApp = new PhalconApp($di);
+            $this->phalconApp->setEventsManager($eventsManager);
         } catch (\Exception $e){
             echo $e->getMessage();
             echo $e->getTraceAsString();
@@ -131,10 +127,10 @@ class Core
     }
 
     function registerPhalconDi(){
-        if (!$this->phalconApplication) {
+        if (!$this->phalconApp) {
             return;
         }
-        $di = $this->phalconApplication->getDI();
+        $di = $this->phalconApp->getDI();
         Di::getInstance()->setPhalconAppDi($di);
     }
 

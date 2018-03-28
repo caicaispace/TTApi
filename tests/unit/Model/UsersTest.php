@@ -4,7 +4,7 @@ namespace App\Test\Unit\Models;
 
 use UnitTester;
 use Codeception\Test\Unit;
-use TTApiDemo\Models\Users;
+use App\Models\Users;
 
 class UsersTest extends Unit
 {

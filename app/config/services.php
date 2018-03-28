@@ -11,11 +11,12 @@ use Phalcon\Cache\Frontend\Data as FrontData;
 use Phalcon\Session\Adapter\Libmemcached as SessionAdapter;
 use Phalcon\Events\Manager as EventsManager;
 use Phalcon\Mvc\Router;
+use Phalcon\Logger\Adapter\File as FileLogger;
 
-use TTApiDemo\Plugins\NotFoundPlugin;
-use TTApiDemo\Plugins\Acl\Resource;
-use TTApiDemo\Plugins\Acl\SecurityPlugin;
-use TTApiDemo\Plugins\JWTPlugin;
+use App\Plugins\NotFoundPlugin;
+use App\Plugins\Acl\Resource;
+use App\Plugins\Acl\SecurityPlugin;
+use App\Plugins\JWTPlugin;
 
 /**
  * The FactoryDefault Dependency Injector automatically register the right services providing a full stack framework
@@ -50,7 +51,7 @@ $di->setShared('dispatcher', function () use ($di, $eventsManager) {
 
     $dispatcher = new Dispatcher;
 
-    $dispatcher->setDefaultNamespace('TTApiDemo\Controllers');
+    $dispatcher->setDefaultNamespace('App\Controllers');
     $dispatcher->setEventsManager($eventsManager);
 
     return $dispatcher;
@@ -120,4 +121,11 @@ $di->setShared('cacheMemcache', function () {
  */
 $di->setShared('router', function () use ($eventsManager) {
     return require APP_PATH . 'config/routes.php';
+});
+
+/**
+ * Add logger
+ */
+$di->setShared('logger', function ($name) use ($config) {
+    return $logger = new FileLogger($config->logger_path.$name);
 });

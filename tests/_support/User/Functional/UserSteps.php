@@ -36,7 +36,7 @@ class UserSteps
     {
         $I = $this->tester;
 
-        return $I->haveRecord('TTApiDemo\Models\Users', $this->formFields);
+        return $I->haveRecord('App\Models\Users', $this->formFields);
     }
 
     /**

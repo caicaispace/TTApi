@@ -1,6 +1,6 @@
 <?php
 
-namespace TTApiDemo\Controllers;
+namespace App\Controllers;
 
 use Library\Base\Phalcon\BController;
 
