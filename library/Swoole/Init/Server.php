@@ -105,14 +105,13 @@ class Server
         $this->getServer()->on("request",
             function (\swoole_http_request $request,\swoole_http_response $response){
 
-            echo '-------------- start time '.date('Y-m-d H:i:s').' --------------' . PHP_EOL;
-            echo 'fd            '.$request->fd . PHP_EOL;
-            echo 'master_pid    '.$this->swooleServer->master_pid . PHP_EOL;
-            echo 'manager_pid   '.$this->swooleServer->manager_pid . PHP_EOL;
-            echo 'worker_id     '.$this->swooleServer->worker_id . PHP_EOL;
-            echo 'taskworker    '.$this->swooleServer->taskworker . PHP_EOL;
-//            echo 'connections   '.$this->swooleServer->connections . PHP_EOL;
-            echo '-------------- end time '.date('Y-m-d H:i:s').' --------------' . PHP_EOL;
+//            echo '-------------- start time '.date('Y-m-d H:i:s').' --------------' . PHP_EOL;
+//            echo 'fd            '.$request->fd . PHP_EOL;
+//            echo 'master_pid    '.$this->swooleServer->master_pid . PHP_EOL;
+//            echo 'manager_pid   '.$this->swooleServer->manager_pid . PHP_EOL;
+//            echo 'worker_id     '.$this->swooleServer->worker_id . PHP_EOL;
+//            echo 'taskworker    '.$this->swooleServer->taskworker . PHP_EOL;
+//            echo '-------------- end time '.date('Y-m-d H:i:s').' --------------' . PHP_EOL;
 
             $request2 = HttpRequest::getInstance($request);
             $response2 = HttpResponse::getInstance($response);
