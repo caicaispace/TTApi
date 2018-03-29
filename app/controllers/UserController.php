@@ -16,11 +16,10 @@ class UserController extends BController implements IController
     public function listAction()
     {
         $logic = new UserLogic;
-        $userData = [];
-        if ($user = $logic->getList()) {
-            $userData = $user->toArray();
+        if (!$user = $logic->getList()) {
+            return $this->response->error();
         }
-        $this->response->setStatusCode(400);
+        $userData = $user->toArray();
         $this->response->setListData($userData);
         $this->response->send();
     }
@@ -28,10 +27,10 @@ class UserController extends BController implements IController
     public function infoAction()
     {
         $logic = new UserLogic;
-        $userData = [];
-        if ($user = $logic->getInfo()) {
-            $userData = $user->toArray();
+        if (!$user = $logic->getInfo()) {
+            return $this->response->error();
         }
+        $userData = $user->toArray();
         $this->response->setRowData($userData);
         $this->response->send();
     }
