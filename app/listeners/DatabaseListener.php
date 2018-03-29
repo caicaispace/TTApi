@@ -66,7 +66,8 @@ class DatabaseListener
         $final = $profile->getFinalTime();
         $total = $profile->getTotalElapsedSeconds();
         $loggerName = $this->getConfig('databases.mysql.logger_name');
-        $this->getDi()->getShared('logger',[$loggerName])->log(\Phalcon\Logger::DEBUG, "[Database]: Start=$start, Final=$final, Total=$total, SQL=$sql");
+        $loggerContent = "[Database]: Start=$start, Final=$final, Total=$total, SQL=$sql";
+        $this->getDi()->getShared('logger',[$loggerName])->log(\Phalcon\Logger::DEBUG, $loggerContent);
     }
 
     /**

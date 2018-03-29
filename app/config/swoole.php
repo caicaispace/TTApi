@@ -13,7 +13,7 @@ return [
                 'task_max_request' => 10,
                 'max_request'      => 5000,//强烈建议设置此配置项
                 'worker_num'       => 8,
-                'document_root'         => ROOT.'/public',
+                'document_root'         => DOCROOT.'/public',
                 'enable_static_handler' => true,
             ],
         ],
