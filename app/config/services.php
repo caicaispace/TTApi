@@ -76,11 +76,15 @@ $di->setShared('view', function() {
 /**
  * Database connection is created based in the parameters defined in the configuration file
  */
-$di->setShared('db', function () use ($config) {
+$di->setShared('db', function () use ($config, $eventsManager) {
     $config = $config->get('databases')->mysql;
     $dbClass = $config->adapter;
     $options = $config->options->master->toArray();
-    return new $dbClass($options);
+    $db = new $dbClass($options);
+    $listener = $config->listener;
+    $eventsManager->attach('db', new $listener);
+    $db->setEventsManager($eventsManager);
+    return $db;
 });
 
 /**

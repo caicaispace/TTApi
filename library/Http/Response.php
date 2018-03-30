@@ -26,7 +26,7 @@ class Response extends PhalconResponse
     protected static $instance;
     static function getInstance(\swoole_http_response $response = null, ...$ags){
         if($response !== null AND PHP_SAPI === 'cli'){
-            self::$instance = new static($response);
+            self::$instance = new static($response, $ags);
         }elseif(!isset(self::$instance)){
             self::$instance = new static();
         }
