@@ -6,14 +6,14 @@ use Phalcon\Http\Response as PhalconResponse;
 
 class Response extends PhalconResponse
 {
-    // swoole
+    // Swoole
     const STATUS_NOT_END = 0;
     const STATUS_LOGICAL_END = 1;
     const STATUS_REAL_END = 2;
     private $swoole_http_response = null;
     private $isEndResponse = 0;//1 逻辑end  2真实end
 
-    //
+    // Response
     private $uniqueId = null;
     private $rowData = null;
     private $listData = null;
