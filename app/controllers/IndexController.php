@@ -14,11 +14,13 @@ class IndexController extends BController
 
     public function indexAction()
     {
-        if (!$this->request->isPost()) {
-            $this->flash->notice(
-                'This is a TTApi Demo Application. ' .
-                "Please don't provide us any personal information. Thanks!"
-            );
+        if ($this->request->isPost()) {
+            return $this->response->error();
         }
+        $data = [
+            'ttApi' => 'hello world'
+        ];
+        $this->response->setRowData($data);
+        $this->response->send();
     }
 }

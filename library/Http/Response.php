@@ -96,15 +96,6 @@ class Response extends PhalconResponse
     }
 
     /**
-     * @return $this
-     */
-    public function setTimestamp()
-    {
-        $this->timestamp = time();
-        return $this;
-    }
-
-    /**
      * @return null
      */
     public function getTimestamp()
@@ -117,7 +108,7 @@ class Response extends PhalconResponse
      */
     public function resetTimestamp()
     {
-        $this->setTimestamp();
+        $this->timestamp = time();
         return $this;
     }
 
@@ -162,6 +153,7 @@ class Response extends PhalconResponse
              */
             $content = $this->_content;
             if ($content != null) {
+                $this->resetHandle();
                 echo $content;
             } else {
                 $file = $this->_file;
@@ -174,7 +166,8 @@ class Response extends PhalconResponse
         return parent::send();
     }
 
-    function end($realEnd = false){
+    public function end($realEnd = false)
+    {
         if($this->isEndResponse == self::STATUS_NOT_END){
             $this->isEndResponse = self::STATUS_LOGICAL_END;
         }
@@ -201,13 +194,27 @@ class Response extends PhalconResponse
         }
     }
 
-    function isEndResponse(){
+    private function resetHandle()
+    {
+        $this->isEndResponse = 0;//1 逻辑end  2真实end
+        //
+        $this->uniqueId = null;
+        $this->rowData = null;
+        $this->listData = null;
+        $this->fieldsMap = null;
+        $this->page = null;
+        $this->message = '操作成功';
+        $this->timestamp = null;
+        $this->resetTimestamp();
+    }
+
+    function isEndResponse()
+    {
         return $this->isEndResponse;
     }
 
     private function extendedContent()
     {
-        $this->setTimestamp();
         $content = array(
             'info' => $this->rowData,
             'list' => $this->listData,

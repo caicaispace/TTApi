@@ -37,7 +37,11 @@ class UserController extends BController implements IController
 
     public function createAction()
     {
-        // TODO: Implement createAction() method.
+        $logic = new UserLogic;
+        if (!$result = $logic->create()) {
+            return $this->response->error();
+        }
+        $this->response->success();
     }
 
     public function updateAction()
