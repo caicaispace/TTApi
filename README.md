@@ -64,7 +64,7 @@ https://github.com/swoole/swoole-src.git
 - 获取 TT api 框架
 
 ```
-git@github.com:ycman/TTApi.git
+https://github.com/ycman/TTApi.git
 ```
 
 - nginx + swoole 模式简易配置

@@ -153,7 +153,7 @@ class Response extends PhalconResponse
              */
             $content = $this->_content;
             if ($content != null) {
-                $this->resetHandle();
+                $this->reset();
                 echo $content;
             } else {
                 $file = $this->_file;
@@ -194,7 +194,7 @@ class Response extends PhalconResponse
         }
     }
 
-    private function resetHandle()
+    private function reset()
     {
         $this->isEndResponse = 0;//1 逻辑end  2真实end
         //
