@@ -29,6 +29,7 @@ return [
                     'password' => 'goodluck888',
                     'dbname' => 'tt_demo',
                     'charset' => 'utf8mb4',
+                    'persistent' => true,
                 ],
                 // 暂不支持数据库主从/读写分离
 //                'slave' => [
