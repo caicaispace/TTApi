@@ -2,10 +2,9 @@
 
 namespace App\Controllers;
 
-use Library\Base\Phalcon\BController;
+use Library\Base\Phalcon\AbstractInterface\AController;
 
-
-class IndexController extends BController
+class IndexController extends AController
 {
     public function initialize()
     {

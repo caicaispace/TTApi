@@ -1,12 +1,12 @@
 <?php
 
-namespace Library\Base\Phalcon;
+namespace Library\Base\Phalcon\AbstractInterface;
 
 use Phalcon\Mvc\Controller;
 use Library\Http\Response;
 use Library\Base\TDi;
 
-class BController extends Controller
+abstract class AController extends Controller
 {
     use TDi;
 

@@ -2,11 +2,11 @@
 
 namespace App\Controllers;
 
-use Library\Base\Phalcon\BController;
+use Library\Base\Phalcon\AbstractInterface\AController;
 use Library\Base\Phalcon\AbstractInterface\IController;
 use App\Logics\UserLogic;
 
-class UserController extends BController implements IController
+class UserController extends AController implements IController
 {
     public function initialize()
     {

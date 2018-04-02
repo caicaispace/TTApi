@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Phalcon\Mvc\Model;
+use Library\Base\Phalcon\AbstractInterface\AModel;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Email as EmailValidator;
 use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
@@ -12,7 +12,7 @@ use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
  *
  * @method static Users findFirstById(int $id)
  */
-class Users extends Model
+class Users extends AModel
 {
     const STATUS_ACTIVE   = 'Y';
     const STATUS_INACTIVE = 'N';

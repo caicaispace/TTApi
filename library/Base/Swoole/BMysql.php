@@ -18,19 +18,16 @@ class BMysql
     protected $workerId;
 
     /**
-     * 数据库配置
      * @var array
      */
     protected $options = array();
 
     /**
-     * 定时器
      * @var int
      */
     protected $timerId;
 
     /**
-     * 重连尝试次数
      * @var int
      */
     protected $maxRetry;
@@ -137,7 +134,9 @@ class BMysql
     }
 
     /**
-     * 获取连接的信息
+     *
+     * get Connection Info
+     *
      * @param $key
      * @return array
      */
@@ -175,8 +174,8 @@ class BMysql
 //        }
         // 打开数据库调试日志
         if ($this->getConfig('debug', false)) {
-//            $listener = $this->getConfig('databases.mysql.listener');
-//            $this->getDi()->getEventsManager()->attach('db', new $listener);
+            $listener = $this->getConfig('databases.mysql.listener');
+            $this->getDi()->getEventsManager()->attach('db', new $listener);
         }
         /**
          * check MySQL server has gone away and reconnect it
@@ -227,7 +226,6 @@ class BMysql
     public function forceReconnectHandle(Mysql $connection, $key = null, $tryTimes = 1)
     {
         $errorInfo = $connection->getErrorInfo();
-        Logger::getInstance()->log($errorInfo);
         if ($errorInfo[1] == 2006) {
             try {
                 $connection->connect();
