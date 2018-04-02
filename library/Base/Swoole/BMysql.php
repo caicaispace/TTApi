@@ -58,17 +58,13 @@ class BMysql
     }
 
     /**
-     * @param $serviceName
-     * @return $this
+     * @param $key
+     * @return \Phalcon\Db\Adapter
      */
-    public function ping($serviceName) {
-        try {
-            $this->getDi()->getShared($serviceName)->fetchAll('SELECT 1');
-        }
-        catch (\Exception $e) {
-            $this->getDi()->getShared($serviceName)->connect();
-        }
-        return $this;
+    public function ping($key) {
+        $connection = $this->getConnection($key);
+        $connection->query('SELECT 1');
+        return $connection;
     }
 
     /**
@@ -105,7 +101,7 @@ class BMysql
         if (!isset($this->options[$key])) {
             throw new \LogicException(sprintf('No set %s database', $key));
         }
-        $serviceName = 'databases.mysql.connected.' .$this->workerId. $key;
+        $serviceName = $this->workerId.'.databases.mysql.connected.' . $key;
         if ($force || !$this->getDi()->has($serviceName)) {
             if ($this->getDi()->has($serviceName)) {
                 // Close first
@@ -179,19 +175,15 @@ class BMysql
 //        }
         // 打开数据库调试日志
         if ($this->getConfig('debug', false)) {
-            $listener = $this->getConfig('databases.mysql.listener');
-            $this->getDi()->getEventsManager()->attach('db', new $listener);
-            /**
-             * check MySQL server has gone away and reconnect it
-             */
-            $this->getDi()->getEventsManager()->attach('db:beforeQuery', function ($event, $connection) use ($key) {
-                $errorInfo = $connection->getErrorInfo();
-                if (isset($errorInfo[1]) AND $errorInfo[1] === 2006) {
-                    $this->reconnect($key);
-                    exit(255);
-                }
-            });
+//            $listener = $this->getConfig('databases.mysql.listener');
+//            $this->getDi()->getEventsManager()->attach('db', new $listener);
         }
+        /**
+         * check MySQL server has gone away and reconnect it
+         */
+        $this->getDi()->getEventsManager()->attach('db:beforeQuery', function ($event, $connection) use ($key) {
+            $this->reconnectHandle($connection);
+        });
         // 插入一个定时器，定时连一下数据库，防止IDEL超时断线
         if ($this->getConfig('databases.mysql.antiidle', false)) {
             $interval = $this->getConfig('databases.mysql.interval', 100) * 1000; // 定时器间隔
@@ -204,36 +196,57 @@ class BMysql
 
     /**
      *
+     * reconnect handle
+     *
+     * @param Mysql|null $connection
      */
-    public function reconnectHandle()
+    public function reconnectHandle(Mysql $connection = null)
     {
-        $pid = getmypid();
-        $time = microtime(1);
-        foreach ($this->getOptions() as $key => $option) {
-            $tryTimes = 1;
-            while ($tryTimes < $this->maxRetry) {
-                $errorInfo = $this->getConnection($key)->getErrorInfo();
-                if (isset($errorInfo[1]) AND $errorInfo[1] === 2006) {
-                    Logger::getInstance()->log($errorInfo);
-                    $this->reconnect($key);
-                    exit(255);
+        if ($connection) {
+            $this->forceReconnectHandle($connection);
+        } else {
+            foreach ($this->getOptions() as $key => $option) {
+                $tryTimes = 1;
+                while ($tryTimes < $this->maxRetry) {
+                    $connection = $this->ping($key);
+                    $this->forceReconnectHandle($connection,$key);
+                    $tryTimes ++;
                 }
-                break;
-//                try {
-//                    $info = $this->getConnectionInfo($key);
-//                    Logger::getInstance()->log("[$pid] [Database $key] [$time] AntiIdle: ".$info['server']);
-//                    break;
-//                } catch (\Exception $e) {
-//                    if (preg_match("/(errno=32 Broken pipe)|(MySQL server has gone away)/", $e->getMessage())) {
-//                        Logger::getInstance()->log("[$pid] [Database $key] Connection lost({$e->getMessage()}), try to reconnect, tried times $tryTimes");
-//                        $this->reconnect($key);
-//                        $tryTimes ++;
-//                        continue;
-//                    }
-//                    Logger::getInstance()->log("[$pid] [Database $key] Quit on exception: ".$e->getMessage());
-//                    exit(255);
-//                }
             }
         }
+    }
+
+    /**
+     *
+     * force reconnect handle
+     *
+     * @param Mysql $connection
+     * @param null $key
+     * @param int $tryTimes
+     */
+    public function forceReconnectHandle(Mysql $connection, $key = null, $tryTimes = 1)
+    {
+        $errorInfo = $connection->getErrorInfo();
+        Logger::getInstance()->log($errorInfo);
+        if ($errorInfo[1] == 2006) {
+            try {
+                $connection->connect();
+            } catch (\Exception $e) {
+                $pid = getmypid();
+                $time = microtime(1);
+                try {
+                    $info = $this->getConnectionInfo($key);
+                    Logger::getInstance()->log("[$pid] [Database $key] [$time] AntiIdle: ".$info['server']);
+                } catch (\Exception $e) {
+                    if (preg_match("/(errno=32 Broken pipe)|(MySQL server has gone away)/", $e->getMessage())) {
+                        Logger::getInstance()->log("[$pid] [Database $key] Connection lost({$e->getMessage()}), try to reconnect, tried times $tryTimes");
+                        $this->reconnect($key);
+                    }
+                    Logger::getInstance()->log("[$pid] [Database $key] Quit on exception: ".$e->getMessage());
+                    exit(255);
+                }
+            }
+        }
+
     }
 }
