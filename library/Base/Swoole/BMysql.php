@@ -105,7 +105,6 @@ class BMysql
         if (!isset($this->options[$key])) {
             throw new \LogicException(sprintf('No set %s database', $key));
         }
-
         $serviceName = 'databases.mysql.connected.' .$this->workerId. $key;
         if ($force || !$this->getDi()->has($serviceName)) {
             if ($this->getDi()->has($serviceName)) {
@@ -116,7 +115,7 @@ class BMysql
             $config = $this->options[$key];
             $config += [
                 "options"  => [ //长连接配置
-                    \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8mb4'",
+                    \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
                     \PDO::ATTR_PERSISTENT => true,//长连接
                 ]
             ];
@@ -126,7 +125,7 @@ class BMysql
                 'username'   => $config['username'],
                 'password'   => $config['password'],
                 'dbname'     => $config['dbname'],
-                'charset'    => isset($config['charset']) ? $config['charset'] : 'utf8mb4',
+                'charset'    => isset($config['charset']) ? $config['charset'] : 'utf8',
                 'persistent' => isset($config['persistent']) ? $config['persistent'] : false,
             ]);
             $connection->setEventsManager($this->getDi()->getEventsManager());
@@ -182,6 +181,16 @@ class BMysql
         if ($this->getConfig('debug', false)) {
             $listener = $this->getConfig('databases.mysql.listener');
             $this->getDi()->getEventsManager()->attach('db', new $listener);
+            /**
+             * check MySQL server has gone away and reconnect it
+             */
+            $this->getDi()->getEventsManager()->attach('db:beforeQuery', function ($event, $connection) use ($key) {
+                $errorInfo = $connection->getErrorInfo();
+                if (isset($errorInfo[1]) AND $errorInfo[1] === 2006) {
+                    $this->reconnect($key);
+                    exit(255);
+                }
+            });
         }
         // 插入一个定时器，定时连一下数据库，防止IDEL超时断线
         if ($this->getConfig('databases.mysql.antiidle', false)) {
@@ -203,20 +212,27 @@ class BMysql
         foreach ($this->getOptions() as $key => $option) {
             $tryTimes = 1;
             while ($tryTimes < $this->maxRetry) {
-                try {
-                    $info = $this->getConnectionInfo($key);
-                    Logger::getInstance()->log("[$pid] [Database $key] [$time] AntiIdle: ".$info['server']);
-                    break;
-                } catch (\Exception $e) {
-                    if (preg_match("/(errno=32 Broken pipe)|(MySQL server has gone away)/", $e->getMessage())) {
-                        Logger::getInstance()->log("[$pid] [Database $key] Connection lost({$e->getMessage()}), try to reconnect, tried times $tryTimes");
-                        $this->reconnect($key);
-                        $tryTimes ++;
-                        continue;
-                    }
-                    Logger::getInstance()->log("[$pid] [Database $key] Quit on exception: ".$e->getMessage());
+                $errorInfo = $this->getConnection($key)->getErrorInfo();
+                if (isset($errorInfo[1]) AND $errorInfo[1] === 2006) {
+                    Logger::getInstance()->log($errorInfo);
+                    $this->reconnect($key);
                     exit(255);
                 }
+                break;
+//                try {
+//                    $info = $this->getConnectionInfo($key);
+//                    Logger::getInstance()->log("[$pid] [Database $key] [$time] AntiIdle: ".$info['server']);
+//                    break;
+//                } catch (\Exception $e) {
+//                    if (preg_match("/(errno=32 Broken pipe)|(MySQL server has gone away)/", $e->getMessage())) {
+//                        Logger::getInstance()->log("[$pid] [Database $key] Connection lost({$e->getMessage()}), try to reconnect, tried times $tryTimes");
+//                        $this->reconnect($key);
+//                        $tryTimes ++;
+//                        continue;
+//                    }
+//                    Logger::getInstance()->log("[$pid] [Database $key] Quit on exception: ".$e->getMessage());
+//                    exit(255);
+//                }
             }
         }
     }

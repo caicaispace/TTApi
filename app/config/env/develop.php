@@ -15,8 +15,8 @@ return [
      */
     'databases' => [
         'mysql' =>[
-            'antiidle'  => true, // 开启后，会通过定时器定时访问一下数据库，防止发呆断线
-            'interval'  => 3600,  // 断线重连定时器间隔
+            'antiidle'  => false, // 开启后，会通过定时器定时访问一下数据库，防止发呆断线
+            'interval'  => 100,  // 断线重连定时器间隔
             'max_retry' => 3,    // 断线重连重连尝试次数
             'adapter' => \Phalcon\Db\Adapter\Pdo\Mysql::class,
             'listener' => \App\Listeners\DatabaseListener::class,
