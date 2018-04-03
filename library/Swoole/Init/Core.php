@@ -119,6 +119,7 @@ class Core
              */
             require APP_PATH . 'config/services.php';
             $this->phalconApp = new PhalconApp($di);
+//            $this->phalconApp->useImplicitView(false);
             $this->phalconApp->setEventsManager($eventsManager);
         } catch (\Exception $e){
             echo $e->getMessage();

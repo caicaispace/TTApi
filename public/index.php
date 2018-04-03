@@ -29,6 +29,7 @@ try {
     require APP_PATH . 'config/services.php';
 
     $application = new Application($di);
+    $application->useImplicitView(false);
     $application->setEventsManager($eventsManager);
 
     if (APPLICATION_ENV == APP_TEST) {

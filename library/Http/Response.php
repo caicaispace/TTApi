@@ -58,7 +58,6 @@ class Response extends PhalconResponse
      */
     public function setRowData($row)
     {
-        $this->listData = null;
         $this->rowData = $row;
         return $this;
     }
@@ -69,7 +68,6 @@ class Response extends PhalconResponse
      */
     public function setListData($list)
     {
-        $this->rowData = null;
         $this->listData = $list;
         return $this;
     }
