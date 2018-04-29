@@ -133,7 +133,3 @@ php bin/server stop # 停止框架
 php bin/server reload # 热重启框架
 php bin/server help # 获取帮助
 ```
-
-### 讨论/交流
-
-#### QQ 交流群
