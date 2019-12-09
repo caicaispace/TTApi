@@ -1,6 +1,6 @@
 # TT api PHP framework
 
-** 实验性产品，请勿生产环境使用**
+**实验性产品，生产环境请勿使用**
 
 基于 phalcon 与 swoole 的高性能 PHP api 框架
 
